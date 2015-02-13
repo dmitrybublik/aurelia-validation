@@ -1,0 +1,36 @@
+{
+  "name": "aurelia-validation",
+  "version": "0.0.1",
+  "description": "aurelia-validation is a small validation plugin for aurelia.io that uses a fluent API",
+  "main": "src/validation.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/janvanderhaegen/aurelia-validation.git"
+  },
+  "registry": "jspm",
+  "keywords": [
+    "Aurelia",
+    "Validation"
+  ],
+  "author": "Jan Van der Haegen (van.der.haegen.j@gmail.com)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zewa666/aurelia-validation/issues"
+  },
+  "homepage": "https://github.com/zewa666/aurelia-validation",
+  "devDependencies": {
+    "karma": "^0.12.28",
+    "karma-6to5-preprocessor": "^3.0.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-jasmine": "^0.3.2",
+    "karma-jasmine-ajax": "git://github.com/martingust/karma-jasmine-ajax.git",
+    "karma-jspm": "^1.0.1",
+    "jasmine-core": "^2.1.3"
+  },
+  "dependencies": {
+    "aurelia-framework": "^0.8.6"
+  }
+}

@@ -11,10 +11,10 @@ export class ValidateAttachedBehavior {
     this.changedObservers = [];
   }
   valueChanged(newValue)
-  {  
+  {
   }
 
-  attached(){ 
+  attached(){
   	this.subscribeChangedHandlers(this.element);
   }
 
@@ -47,7 +47,7 @@ export class ValidateAttachedBehavior {
      					var formGroup = this.searchFormGroup(currentElement, 0);
 						if(formGroup)
 						{
-							if(validationProperty.isValid){ 
+							if(validationProperty.isValid){
 	      						formGroup.classList.remove('has-warning');
 	      						formGroup.classList.add('has-success');
 
@@ -57,7 +57,7 @@ export class ValidateAttachedBehavior {
 	      						formGroup.classList.add('has-warning');
 	      					}
 
-	      					var labels = currentElement.labels;					
+	      					var labels = currentElement.labels;
 		      				for(var ii = 0; ii < labels.length; ii++){
 		      					var label = labels[i];
 		      					var helpBlock = label.nextSibling;
@@ -87,11 +87,11 @@ export class ValidateAttachedBehavior {
 									}
 		      					}
 
-		      					helpBlock.textContent = validationProperty.message; 
+		      					helpBlock.textContent = validationProperty.message;
 		      				}
 
 	     				}
-	     			}); 
+	     			});
      		}
      	}
      }
@@ -107,7 +107,7 @@ export class ValidateAttachedBehavior {
   		this.changedObservers[i]();
   	}
   	this.changedObservers = [];
-  } 
+  }
 }
 
 
@@ -147,7 +147,7 @@ export class Validation{
 			return 0 === val.length;
 		}
 		return false;
-	 }   
+	 }
 }
 
 export class ValidationGroup{
@@ -166,7 +166,7 @@ export class ValidationGroup{
 			{
 				this.isValid = false;
 				return;
-			 }			
+			 }
 		};
 		this.isValid = true;
 	 }
@@ -184,7 +184,7 @@ export class ValidationGroup{
 		this.validationProperties.push(new ValidationProperty(this.observerLocator, propertyName, this, this.validationUtilities));
 		return this;
 	}
- 
+
 	notEmpty(){
 		this.validationProperties[this.validationProperties.length -1].notEmpty();
 		return this;
@@ -221,7 +221,7 @@ export class ValidationGroup{
 
 	minLength(minimumValue)
 	{
-		this.passes(new MiminumLengthValidationRule(minimumValue)); 
+		this.passes(new MiminumLengthValidationRule(minimumValue));
 		return this;
 	}
 
@@ -260,7 +260,7 @@ export class ValidationProperty{
 	constructor(observerLocator, propertyName, validationGroup, validationUtilities)
 	{
 		this.validationUtilities = validationUtilities;
-		this.propertyName = propertyName;	
+		this.propertyName = propertyName;
 		this.validationGroup = validationGroup;
 		this.isValid = true;
 		this.isRequired = false;
@@ -301,7 +301,7 @@ export class ValidationProperty{
 		if(this.validationUtilities.isEmptyValue(newValue))
 		{
 			shouldBeValid = !this.isRequired;
-			shouldBeMessage = 'is required'; 
+			shouldBeMessage = 'is required';
 		}
 		else
 		{
@@ -313,12 +313,12 @@ export class ValidationProperty{
 					shouldBeValid = false;
 					shouldBeMessage = rule.explain();
 					break;
-				 }			
+				 }
 			};
-		} 
+		}
 
 		var notifyObservers = (!this.isDirty && shouldBeDirty) || (this.isValid !== shouldBeValid) || (this.message !== shouldBeMessage);
-		
+
 
 		this.message = shouldBeMessage;
 		this.isValid = shouldBeValid;
@@ -332,7 +332,7 @@ export class ValidationProperty{
 				callback(this);
 			}
 		}
-		this.validationGroup.checkValidity();	
+		this.validationGroup.checkValidity();
 	}
 
 
@@ -342,12 +342,12 @@ export class ValidationProperty{
     	this.isRequired = true;
     	this.validateCurrentValue();
     }
-} 
+}
 
 export class ValidationRule{
 
 	constructor(treshold, message, onValidate){
-		this.onValidate = onValidate; 
+		this.onValidate = onValidate;
 		this.treshold = treshold;
 		this.message = message;
 		this.errorMessage = null;
@@ -391,7 +391,7 @@ export class MiminumLengthValidationRule extends ValidationRule{
 	constructor (minimumLength) {
 		super(
 			minimumLength,
-			(newValue, minimumLength) => { 
+			(newValue, minimumLength) => {
 				return `needs to be at least ${minimumLength} characters long`;
 			},
 			(newValue, minimumLength) => {
@@ -404,7 +404,7 @@ export class MiminumLengthValidationRule extends ValidationRule{
 export class MaximumLengthValidationRule extends ValidationRule{
 	constructor(maximumLength)
 	{
-		super( 
+		super(
 			maximumLength,
 			(newValue, maximumLength) => {
 				return `cannot be longer then ${maximumLength} characters`;
@@ -413,26 +413,26 @@ export class MaximumLengthValidationRule extends ValidationRule{
 			return newValue.length !== undefined && newValue.length < maximumLength;
 			}
 		);
-	} 
+	}
 }
 
 export class NumericValidationRule extends ValidationRule{
 	constructor()
 	{
 		super(
-			null, 
+			null,
 			(newValue) => {
 				return `must be a number`;
 			},
 			(newValue) => {
 				var floatValue = parseFloat(newValue);
 
-				var numeric = !Number.isNaN(parseFloat(newValue)); 
+				var numeric = !Number.isNaN(parseFloat(newValue));
 				var finite = Number.isFinite(newValue);
 				return !Number.isNaN(parseFloat(floatValue)) && Number.isFinite(floatValue);
 			}
 		);
-	} 
+	}
 }
 
 export class RegexValidationRule extends ValidationRule
@@ -463,7 +463,7 @@ export class MinimumValueRule extends ValidationRule
 			(newValue, minimumValue) => {
 				return minimumValue <= newValue;
 			}
-		); 
+		);
 	}
 }
 export class MaximumValueRule extends ValidationRule
@@ -478,7 +478,7 @@ export class MaximumValueRule extends ValidationRule
 			(newValue, maximumValue) => {
 				return newValue < maximumValue;
 			}
-		);  
+		);
 	}
 }
 
@@ -495,13 +495,13 @@ export class EqualityRule extends ValidationRule{
 				if(treshhold.otherValueLabel)
 					if(treshhold.equality)
 						return `does not match ${treshold.otherValueLabel}`;
-					else						
+					else
 						return `cannot not match ${treshold.otherValueLabel}`;
 				else
 
 					if(treshhold.equality)
 						return `should be ${treshold.otherValue}`;
-					else						
+					else
 						return `cannot not be ${treshold.otherValue}`;
 			},
 			(newValue, treshold) => {
