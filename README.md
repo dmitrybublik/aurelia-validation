@@ -1,5 +1,7 @@
 # aurelia-validation
 
+[![Join the chat at https://gitter.im/janvanderhaegen/aurelia-validation](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/janvanderhaegen/aurelia-validation?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 aurelia-validation is a small validation plugin for [aurelia.io](http://aurelia.io) that uses a fluent API
 ``` javascript
 this.validation = validation.on(this)
