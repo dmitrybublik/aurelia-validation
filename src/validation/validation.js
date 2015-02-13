@@ -1,7 +1,7 @@
 import {ObserverLocator} from 'aurelia-framework'
 import {Behavior} from 'aurelia-framework';
 
-export class ValidateAttachedBehavior {
+export class ValidateAttachedBehavior { 
     static metadata() {
         return Behavior
             .attachedBehavior('validate')
@@ -238,8 +238,7 @@ export class ValidationGroup {
     passes(validationRule) {
         var validationProperty = this.validationProperties[this.validationProperties.length - 1];
         validationProperty.addValidationRule(validationRule);
-    }
-
+    } 
 }
 export class ValidationProperty {
     constructor(observerLocator, propertyName, validationGroup, validationUtilities) {
@@ -259,7 +258,7 @@ export class ValidationProperty {
         });
         this.isDirty = false;
     }
-
+ 
     onValidate(onValidateCallback) {
         this.onValidateCallbacks.push(onValidateCallback);
     }
@@ -317,7 +316,7 @@ export class ValidationProperty {
         this.isRequired = true;
         this.validateCurrentValue();
     }
-}
+} 
 
 export class ValidationRule {
 
@@ -417,6 +416,7 @@ export class RegexValidationRule extends ValidationRule {
         );
     }
 }
+
 export class MinimumValueRule extends ValidationRule {
     constructor(minimumValue) {
         super(
@@ -468,5 +468,4 @@ export class EqualityRule extends ValidationRule {
             }
         );
     }
-
 }
