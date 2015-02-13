@@ -5,7 +5,6 @@ export class ValidateAttachedBehavior {
     static metadata() {
         return Behavior
             .attachedBehavior('validate')
-            .noView()
     }
 
     static inject() {
