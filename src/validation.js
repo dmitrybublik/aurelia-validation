@@ -3,5 +3,5 @@ import {ValidateAttachedBehavior} from './validation/validation'
 
 export function install(aurelia)
 {
-	aurelia.withResources([ValidateAttachedBehavior]);
+	aurelia.withResources(ValidateAttachedBehavior);
 }
