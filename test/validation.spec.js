@@ -18,40 +18,55 @@ class TestSubject {
 }
 
 describe('Basic validation tests: notempty', () => {
-  it('should fail if a notempty property is null', function() {
+  it('should fail if a notempty property is null', () => {
     var subject = TestSubject.createInstance(null);
     expect(subject.validation.isValid).toBe(false);
   });
 
-  it('should fail if a notempty property is an empty string', function(){
+
+  it('should fail if a notempty property is an empty string', () => {
     var subject = TestSubject.createInstance('');
     expect(subject.validation.isValid).toBe(false);
   });
 
 
-  it('should fail if a notempty property is contains only whitespace', function(){
+  it('should fail if a notempty property contains only whitespace', () => {
     var subject = TestSubject.createInstance('            ');
     expect(subject.validation.isValid).toBe(false);
   });
 
-  it('should not fail if a notempty property is a random string', function(){
+
+  it('should not fail if a notempty property is a random string', () => {
     var subject = TestSubject.createInstance('a random string');
     expect(subject.validation.isValid).toBe(true);
   });
 
 
-  it('should fail if an array is empty', function(){
+  it('should fail if an array is empty', () => {
     var subject = TestSubject.createInstance([]);
     expect(subject.validation.isValid).toBe(false);
   });
 
 
-  it('should not fail on an array with elements', function(){
+  it('should not fail on an array with elements', () => {
     var subject = TestSubject.createInstance(['some element']);
     expect(subject.validation.isValid).toBe(true);
   });
 
-  it('should update the validation automatically when the property changes', function(done){
+
+  it('should not fail on an array with empty element', () => {
+    var subject = TestSubject.createInstance(['']);
+    expect(subject.validation.isValid).toBe(true);
+  })
+
+
+  it('should not fail if value is a function', () => {
+    var subject = TestSubject.createInstance(() => { return 'Demo'; });
+    expect(subject.validation.isValid).toBe(true);
+  });
+
+
+  it('should update the validation automatically when the property changes', (done) => {
     var subject = TestSubject.createInstance(null);
     expect(subject.validation.isValid).toBe(false);
     subject.firstName = 'Bob the builder';
@@ -62,7 +77,8 @@ describe('Basic validation tests: notempty', () => {
     }, 0);
   });
 
-  it('should update the validation checkAll is called', function(){
+
+  it('should update the validation checkAll is called', () =>{
     var subject = TestSubject.createInstance(null);
     expect(subject.validation.isValid).toBe(false);
     subject.firstName = 'Bob the builder';
@@ -70,7 +86,7 @@ describe('Basic validation tests: notempty', () => {
   });
 
 
-  it('should update if an array gains elements', function(){
+  it('should update if an array gains elements', () => {
     var subject = TestSubject.createInstance([]);
     expect(subject.validation.isValid).toBe(false);
     subject.firstName.push('bob the builder');
@@ -79,5 +95,13 @@ describe('Basic validation tests: notempty', () => {
     expect(subject.validation.checkAll()).toBe( false );
   });
 
+
+  it('should update if an array is overwritten', () => {
+    var subject = TestSubject.createInstance(['a', 'b', 'c']);
+    expect(subject.validation.isValid).toBe(true);
+
+    subject.firstName = [];
+    expect(subject.validation.checkAll()).toBe(false);
+  });
 });
 
