@@ -20,7 +20,7 @@ this.validation = validation.on(this)
 git pull https://github.com/janvanderhaegen/aurelia-validation
 cd aurelia-validation
 npm install
-jspm install
+jspm install -y
 karma start
 ```
 
