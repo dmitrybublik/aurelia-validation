@@ -27,7 +27,22 @@ karma start
 #installation
 
 ####copy & paste
-I've transformed repo into [a nifty NPM package (aurelia-validation)](https://www.npmjs.com/package/aurelia-validation), but I'm still new to the hipster world of NPM... Untill I've optimized the installation procedure, you can grab the contents of the **src** folder and drop them into your plugins folder. If you do not have a plugins folder yet, you can create a subdirectory in your **src** folder called **plugins**.
+I've transformed repo into [a nifty NPM package (aurelia-validation)](https://www.npmjs.com/package/aurelia-validation), but I'm still new to the hipster world of NPM... Until I've optimized the installation procedure, you can grab the contents of the **src** folder and drop them into your plugins folder. If you do not have a plugins folder yet, you can create a subdirectory in your **src** folder called **plugins**.
+
+#### install via JSPM
+go into your project and verify it's already `npm install`'ed and `jspm install`'ed. Now execute following command to install the plugin via JSPM:
+
+```
+jspm install github:janvanderhaegen/aurelia-validation
+```
+
+this will add the plugin into your jspm_packages folder as well as an mapping-line into your config.js like follows:
+
+```
+"aurelia-validation": "github:janvanderhaegen/aurelia-validation@master",
+```
+
+
 
 ####migrate from aurelia-app to aurelia-main 
 You'll need to register the plugin when your aurelia app is bootstrapping. If you have an aurelia app because you cloned a sample, there's a good chance that the app is bootstrapping based on default conventions. In that case, open your **index.html** file and look at the *body* tag.
@@ -39,26 +54,27 @@ Change the *aurelia-app* attribute to *aurelia-main*.
 <body aurelia-app>
 ```
 The aurelia framework will now bootstrap by looking for your **main.js** file and executing the exported *configure* method. Go ahead and add a new **main.js** file with these contents:
-``` javascript
-import {LogManager} from 'aurelia-framework';
-import {ConsoleAppender} from 'aurelia-logging-console';
 
-LogManager.addAppender(new ConsoleAppender());
-LogManager.setLevel(LogManager.levels.debug);
+    import {LogManager} from 'aurelia-framework';
+    import {ConsoleAppender} from 'aurelia-logging-console';
+    
+    LogManager.addAppender(new ConsoleAppender());
+    LogManager.setLevel(LogManager.levels.debug);
+    
+    export function configure(aurelia) {
+      aurelia.use
+    	.defaultBindingLanguage()
+    	.defaultResources()
+    	.router()
+    	.eventAggregator();
+    
+      aurelia.start().then(a => a.setRoot('app', document.body));
+    }
 
-export function configure(aurelia) {
-  aurelia.use
-    .defaultBindingLanguage()
-    .defaultResources()
-    .router()
-    .eventAggregator();
-
-  aurelia.start().then(a => a.setRoot('app', document.body));
-}
-```
 
 ####load the plugin
 During bootstrapping phase, you can now include the validation plugin:
+
 ``` javascript
 import {LogManager} from 'aurelia-framework';
 import {ConsoleAppender} from 'aurelia-logging-console';
@@ -77,6 +93,8 @@ export function configure(aurelia) {
   aurelia.start().then(a => a.setRoot('app', document.body));
 }
 ```
+
+> if you have installed the application via JSPM the plugin reference would be: `.plugin('aurelia-validation')`
 
 #getting started
 
@@ -124,6 +142,9 @@ export class Welcome{
   }
 }
 ```
+
+> if you installed via JSPM the import would be like this `import {Validation} from 'aurelia-validation';`
+
 Great, we're all set, let's add our first validation:
 ``` javascript
   constructor(validation){
