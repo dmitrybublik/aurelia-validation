@@ -68,7 +68,6 @@ describe('Basic validation tests: notempty', () => {
 
   
   it('should update if an array gains elements', function(){
-
     var subject = new TestSubject(new Validation(new ObserverLocator()), []);
     expect(subject.validation.isValid).toBe(false);
     subject.firstName.push('bob the builder');
