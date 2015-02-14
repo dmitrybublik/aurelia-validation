@@ -1,6 +1,6 @@
 {
   "name": "aurelia-validation",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "aurelia-validation is a small validation plugin for aurelia.io that uses a fluent API",
   "main": "src/validation.js",
   "scripts": {
