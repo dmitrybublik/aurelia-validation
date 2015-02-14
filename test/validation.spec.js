@@ -2,9 +2,9 @@
 import {ObserverLocator} from 'aurelia-framework'
 import {Validation} from '../src/validation/validation';
 
-console.log('Test');
+console.log('Basic validation tests');
 
-class Test {
+class TestSubject {
 
   constructor(validation, firstName){
     this.firstName = firstName;
@@ -14,12 +14,68 @@ class Test {
   }
 }
 
-describe('Validation tests', () => {
-
-  it('should fail if no firstName is defined', function() {
-    var instance = new Test(new Validation(new ObserverLocator()), null);
-
-    expect(instance.validation.checkAll()).toBe(false);
+describe('Basic validation tests: notempty', () => {
+  it('should fail if a notempty property is null', function() {
+    var subject = new TestSubject(new Validation(new ObserverLocator()), null);
+    expect(subject.validation.isValid).toBe(false);
   });
-})
 
+  it('should fail if a notempty property is an empty string', function(){
+    var subject = new TestSubject(new Validation(new ObserverLocator()), '');
+    expect(subject.validation.isValid).toBe(false);
+  });
+
+
+  it('should fail if a notempty property is contains only whitespace', function(){
+    var subject = new TestSubject(new Validation(new ObserverLocator()), '            ');
+    expect(subject.validation.isValid).toBe(false);
+  });
+
+  it('should not fail if a notempty property is a random string', function(){
+    var subject = new TestSubject(new Validation(new ObserverLocator()), 'a random string');
+    expect(subject.validation.isValid).toBe(true);
+  });
+
+
+  it('should fail if an array is empty', function(){
+    var subject = new TestSubject(new Validation(new ObserverLocator()), []);
+    expect(subject.validation.isValid).toBe(false);
+  });
+
+
+  it('should not fail on an array with elements', function(){
+    var subject = new TestSubject(new Validation(new ObserverLocator()), ['some element']);
+    expect(subject.validation.isValid).toBe(true);
+  }); 
+
+  it('should update the validation automatically when the property changes', function(done){   
+    var subject = new TestSubject(new Validation(new ObserverLocator()), null);
+    expect(subject.validation.isValid).toBe(false);
+    subject.firstName = 'Bob the builder'; 
+
+    setTimeout(()=>{
+      expect(subject.validation.isValid).toBe( true );
+      done();
+    }, 0);
+  });
+
+  it('should update the validation checkAll is called', function(){   
+    var subject = new TestSubject(new Validation(new ObserverLocator()), null);
+    expect(subject.validation.isValid).toBe(false);
+    subject.firstName = 'Bob the builder';  
+    expect(subject.validation.checkAll()).toBe( true ); 
+  });
+
+  
+  it('should update if an array gains elements', function(){
+
+    var subject = new TestSubject(new Validation(new ObserverLocator()), []);
+    expect(subject.validation.isValid).toBe(false);
+    subject.firstName.push('bob the builder');
+    expect(subject.validation.checkAll()).toBe( true ); 
+    subject.firstName.pop();
+    expect(subject.validation.checkAll()).toBe( false ); 
+  });
+
+});
+ 
