@@ -26,8 +26,6 @@ karma start
 
 #installation
 
-####copy & paste
-I've transformed repo into [a nifty NPM package (aurelia-validation)](https://www.npmjs.com/package/aurelia-validation), but I'm still new to the hipster world of NPM... Until I've optimized the installation procedure, you can grab the contents of the **src** folder and drop them into your plugins folder. If you do not have a plugins folder yet, you can create a subdirectory in your **src** folder called **plugins**.
 
 #### install via JSPM
 go into your project and verify it's already `npm install`'ed and `jspm install`'ed. Now execute following command to install the plugin via JSPM:
@@ -54,7 +52,7 @@ Change the *aurelia-app* attribute to *aurelia-main*.
 <body aurelia-app>
 ```
 The aurelia framework will now bootstrap by looking for your **main.js** file and executing the exported *configure* method. Go ahead and add a new **main.js** file with these contents:
-
+``` javascript
     import {LogManager} from 'aurelia-framework';
     import {ConsoleAppender} from 'aurelia-logging-console';
     
@@ -70,7 +68,7 @@ The aurelia framework will now bootstrap by looking for your **main.js** file an
     
       aurelia.start().then(a => a.setRoot('app', document.body));
     }
-
+```
 
 ####load the plugin
 During bootstrapping phase, you can now include the validation plugin:
@@ -88,13 +86,11 @@ export function configure(aurelia) {
     .defaultResources()
     .router()
     .eventAggregator()
-    .plugin('./plugins/validation/'); //Add this line, double-check the path
+    .plugin('aurelia-validation'); //Add this line to load the plugin
 
   aurelia.start().then(a => a.setRoot('app', document.body));
 }
 ```
-
-> if you have installed the application via JSPM the plugin reference would be: `.plugin('aurelia-validation')`
 
 #getting started
 
@@ -124,7 +120,7 @@ export class Welcome{
 ```
 First, you'll need import the validation class
 ``` javacript
-import {Validation} from './plugins/validation/';  
+import {Validation} from 'aurelia-validation';  
 export class Welcome{
   static inject() { return [Validation]; }
   constructor(validation){
@@ -142,8 +138,7 @@ export class Welcome{
   }
 }
 ```
-
-> if you installed via JSPM the import would be like this `import {Validation} from 'aurelia-validation';`
+ 
 
 Great, we're all set, let's add our first validation:
 ``` javascript
