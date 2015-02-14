@@ -15,6 +15,14 @@ this.validation = validation.on(this)
 ```
 >I live in Mexico and don't give a crap about your anal need for license files. You use, I don't care. You abuse, I shoot you. Now go grab the code and do ya hubba hubba.
 
+#running the tests
+``` 
+git pull https://github.com/janvanderhaegen/aurelia-validation
+cd aurelia-validation
+npm install
+jspm install
+karma start
+```
 
 #installation
 
