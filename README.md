@@ -15,7 +15,7 @@ this.validation = validation.on(this)
 ```
 >I live in Mexico and don't give a crap about your anal need for license files. You use, I don't care. You abuse, I shoot you. Now go grab the code and do ya hubba hubba.
 
-#running the tests
+# Running the tests
 ``` 
 git pull https://github.com/janvanderhaegen/aurelia-validation
 cd aurelia-validation
@@ -24,17 +24,17 @@ jspm install -y
 karma start
 ```
 
-#installation
+# Installation
 
 
-#### install via JSPM
-go into your project and verify it's already `npm install`'ed and `jspm install`'ed. Now execute following command to install the plugin via JSPM:
+#### Install via JSPM
+Go into your project and verify it's already `npm install`'ed and `jspm install`'ed. Now execute following command to install the plugin via JSPM:
 
 ```
 jspm install github:janvanderhaegen/aurelia-validation
 ```
 
-this will add the plugin into your jspm_packages folder as well as an mapping-line into your config.js like follows:
+this will add the plugin into your `jspm_packages` folder as well as an mapping-line into your `config.js` like follows:
 
 ```
 "aurelia-validation": "github:janvanderhaegen/aurelia-validation@master",
@@ -42,16 +42,16 @@ this will add the plugin into your jspm_packages folder as well as an mapping-li
 
 
 
-####migrate from aurelia-app to aurelia-main 
+#### Migrate from aurelia-app to aurelia-main 
 You'll need to register the plugin when your aurelia app is bootstrapping. If you have an aurelia app because you cloned a sample, there's a good chance that the app is bootstrapping based on default conventions. In that case, open your **index.html** file and look at the *body* tag.
 ``` html
 <body aurelia-app>
 ```
 Change the *aurelia-app* attribute to *aurelia-main*.
 ``` html
-<body aurelia-app>
+<body aurelia-main>
 ```
-The aurelia framework will now bootstrap by looking for your **main.js** file and executing the exported *configure* method. Go ahead and add a new **main.js** file with these contents:
+The aurelia framework will now bootstrap the application by looking for your **main.js** file and executing the exported *configure* method. Go ahead and add a new **main.js** file with these contents:
 ``` javascript
     import {LogManager} from 'aurelia-framework';
     import {ConsoleAppender} from 'aurelia-logging-console';
@@ -70,7 +70,7 @@ The aurelia framework will now bootstrap by looking for your **main.js** file an
     }
 ```
 
-####load the plugin
+#### Load the plugin
 During bootstrapping phase, you can now include the validation plugin:
 
 ``` javascript
@@ -92,11 +92,11 @@ export function configure(aurelia) {
 }
 ```
 
-#getting started
+# Getting started
 
 Let's set up the **welcome.js** model from the [skeleton-navigation](http://github.com/aurelia/skeleton-navigation) with some validation. 
 After importing the validation plugin in our model we'll do three things: 
-- add a simple validation that both firstName and lastname are required and between 3 and 10 characters.
+- add a simple validation so that both firstName and lastname are required and have to have a length between 3 and 10 characters.
 - prevent the 'welcome' function from executing if the model isn't valid
 - add validation messages to the view to provide hints to the end-user
 
@@ -118,7 +118,7 @@ export class Welcome{
   }
 }
 ```
-First, you'll need import the validation class
+We start with importing the validation class
 ``` javacript
 import {Validation} from 'aurelia-validation';  
 export class Welcome{
@@ -140,7 +140,7 @@ export class Welcome{
 ```
  
 
-Great, we're all set, let's add our first validation:
+Great, we're all set, now let's add our first validation:
 ``` javascript
   constructor(validation){
     this.heading = 'Welcome to the Aurelia Navigation App!';
@@ -166,22 +166,22 @@ First, let's make sure that the 'welcome' function can only be executed if the v
       alert(`Welcome, ${this.fullName}! `);
   }
 ```
-Secondly, let's provide some visual hints to the users, open your **welcome.html** file and add the validate attached behavior:
+Secondly, let's provide some visual hints to the users. Open your **welcome.html** file and add the validate attached behavior:
 ``` html 
     <form role="form" submit.delegate="welcome()" validate.bind="validation" > 
 ```
 
 Gulp watch that thing and see the validation in action!
 
->Note: by default, a validation message will only be shown if the user actually changes the value (ie. the field is 'dirty'). You could disable your submit function by binding it: 
+>Note: By default, a validation message will only be shown if the user actually changes the value (ie. the field is 'dirty'). You could disable your submit function by binding it: 
 ```<button type=submit" disabled.bind="!validation.isValid" > ```. This has the weird user experience that when a field is not modified by the user (because you supplied a default value for example), there are no visual clues as to why the button is still disabled.
-This is why I prefer the **validation.checkAll()** function. When it is called, this will explicitly evaluate each field even if it's not dirty yet, and show all succes/error messages in the UI, then return a boolean indicating if the validation passes or fails.
+This is why I prefer the **validation.checkAll()** function. When it is called, this will explicitly evaluate each field even if it's not dirty yet, and show all succes/error messages in the UI, then return a boolean indicating whether the validation passes or fails.
 
 
->Note: the validate attached behavior uses TW bootstrap
+>Note: the validate attached behavior uses TW Bootstrap
 - it will find the *form-group* element and add the appropriate TW BS *has-error* or *has-success* classes
 - it will find the labels attached to the element and append a message with the TW BS *help-block* class
-- in addition, the message element will have a *aurelia-valiation-message* class. This allows you to apply specific styling. For example, to make sure that validation messages are shown next to the label, you can add this style:
+- in addition, the message element will have a *aurelia-valiation-message* class. This allows you to apply specific styling. For example, to make sure that validation messages are shown next to the corresponding label, you can add this style:
 ``` CSS 
 		.aurelia-validation-message{
 			display:  inline;
@@ -189,7 +189,7 @@ This is why I prefer the **validation.checkAll()** function. When it is called, 
 		} 
 ```
 
-#validation types
+# Validation types
 
 ####notEmpty()
 This is a special case, dictating that the field is 'required' and cannot be empty.
@@ -237,9 +237,9 @@ Adds a custom message for the previously appended validation rule. **message** i
 Validated that the message passes the provided *validationRule* (ValidationRule). See **custom validation**.
 
 
-#custom validation
+# Custom validation
 
-####the ValidationRule class
+#### The ValidationRule class
 If you need a complex validation rule, you can extract that into a seperate class that inherits from **ValidationRule** and pass it to the *passes(validationRule)* function.
 For example:
 ``` javascript
@@ -264,7 +264,7 @@ The ValidationRule base class needs three constructor arguments:
 - **onValidate**: a javascript function that takes two arguments (**newValue**: the current value that needs to be evaluated, and **treshold**: the javascript object that you passed earlier).
 
 
->Note: it's not needed to name your variables **newValue** and **treshold**, but if you don't then custom (*withMessage*) or localized messages will not properly work.
+>Note: It's not needed to name your variables **newValue** and **treshold**, but if you don't, then custom (*withMessage*) or localized messages will not properly work.
 
 ####Custom validation functions
 In addition to calling *passed(myCustomValidationRule)*, you can add custom validation functions to the **ValidationGroup** object's prototype.
@@ -297,7 +297,7 @@ export class App {
 }
 
 ```
->Note: your function can add custom validation rules by calling *this.passes(customValidationRule)* or any other validation function. Provide a specific error message by calling *withMessage(validationMessage)*. Your function should always end with **return this;** to enable the fluent API.
+>Note: Your function can add custom validation rules by calling *this.passes(customValidationRule)* or any other validation function. Provide a specific error message by calling *withMessage(validationMessage)*. Your function should always end with **return this;** to enable the fluent API.
 
 Then, when you're setting up validation, you can use your new method:
 ``` javascript
