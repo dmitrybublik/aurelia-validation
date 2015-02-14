@@ -27,7 +27,7 @@ karma start
 #installation
 
 ####copy & paste
-I'm planning to transform this repo into a nifty NPM package ( #9 ), but I'm not quite ready for a first release. Untill that time, grab the contents of the **src** folder and drop them into your plugins folder. If you do not have a plugins folder yet, you can create a subdirectory in your **src** folder called **plugins**.
+I've transformed repo into [a nifty NPM package (aurelia-validation)](https://www.npmjs.com/package/aurelia-validation), but I'm still new to the hipster world of NPM... Untill I've optimized the installation procedure, you can grab the contents of the **src** folder and drop them into your plugins folder. If you do not have a plugins folder yet, you can create a subdirectory in your **src** folder called **plugins**.
 
 ####migrate from aurelia-app to aurelia-main 
 You'll need to register the plugin when your aurelia app is bootstrapping. If you have an aurelia app because you cloned a sample, there's a good chance that the app is bootstrapping based on default conventions. In that case, open your **index.html** file and look at the *body* tag.
