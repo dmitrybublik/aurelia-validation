@@ -8,10 +8,8 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
-var _aureliaFramework = require("aurelia-framework");
-
-var ObserverLocator = _aureliaFramework.ObserverLocator;
-var Behavior = _aureliaFramework.Behavior;
+var ObserverLocator = require("aurelia-binding").ObserverLocator;
+var Behavior = require("aurelia-templating").Behavior;
 var ValidateAttachedBehavior = exports.ValidateAttachedBehavior = (function () {
   function ValidateAttachedBehavior(element, observerLocator) {
     _classCallCheck(this, ValidateAttachedBehavior);
@@ -37,11 +35,6 @@ var ValidateAttachedBehavior = exports.ValidateAttachedBehavior = (function () {
       configurable: true
     }
   }, {
-    valueChanged: {
-      value: function valueChanged(newValue) {},
-      writable: true,
-      configurable: true
-    },
     attached: {
       value: function attached() {
         this.subscribeChangedHandlers(this.element);
@@ -160,6 +153,9 @@ var Validation = exports.Validation = (function () {
     },
     isEmptyValue: {
       value: function isEmptyValue(val) {
+        if (typeof val === "function") {
+          return this.isEmptyValue(val());
+        }
         if (val === undefined) {
           return true;
         }

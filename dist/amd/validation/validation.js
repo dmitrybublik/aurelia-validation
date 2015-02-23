@@ -1,4 +1,4 @@
-define(["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
+define(["exports", "aurelia-binding", "aurelia-templating"], function (exports, _aureliaBinding, _aureliaTemplating) {
   "use strict";
 
   var _get = function get(object, property, receiver) { var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc && desc.writable) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -9,8 +9,8 @@ define(["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
 
   var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
-  var ObserverLocator = _aureliaFramework.ObserverLocator;
-  var Behavior = _aureliaFramework.Behavior;
+  var ObserverLocator = _aureliaBinding.ObserverLocator;
+  var Behavior = _aureliaTemplating.Behavior;
   var ValidateAttachedBehavior = exports.ValidateAttachedBehavior = (function () {
     function ValidateAttachedBehavior(element, observerLocator) {
       _classCallCheck(this, ValidateAttachedBehavior);
@@ -36,11 +36,6 @@ define(["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
         configurable: true
       }
     }, {
-      valueChanged: {
-        value: function valueChanged(newValue) {},
-        writable: true,
-        configurable: true
-      },
       attached: {
         value: function attached() {
           this.subscribeChangedHandlers(this.element);
@@ -159,6 +154,9 @@ define(["exports", "aurelia-framework"], function (exports, _aureliaFramework) {
       },
       isEmptyValue: {
         value: function isEmptyValue(val) {
+          if (typeof val === "function") {
+            return this.isEmptyValue(val());
+          }
           if (val === undefined) {
             return true;
           }
