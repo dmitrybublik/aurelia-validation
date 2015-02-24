@@ -1,10 +1,10 @@
-import {ObserverLocator} from 'aurelia-framework'
-import {Behavior} from 'aurelia-framework';
+import {ObserverLocator} from 'aurelia-binding'
+import {Behavior} from 'aurelia-templating';
 
 export class ValidateAttachedBehavior {
     static metadata() {
         return Behavior
-            .attachedBehavior('validate')
+            .attachedBehavior('validate');
     }
 
     static inject() {
@@ -15,9 +15,6 @@ export class ValidateAttachedBehavior {
         this.element = element;
         this.observerLocator = observerLocator;
         this.changedObservers = [];
-    }
-
-    valueChanged(newValue) {
     }
 
     attached() {
