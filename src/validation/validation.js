@@ -1,4 +1,4 @@
-import {ObserverLocator} from 'aurelia-binding'
+import {ObserverLocator} from 'aurelia-binding';
 import {Behavior} from 'aurelia-templating';
 
 export class ValidateAttachedBehavior {
