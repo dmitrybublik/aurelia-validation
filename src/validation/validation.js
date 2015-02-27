@@ -161,7 +161,6 @@ export class ValidationGroup {
                 return;
             }
         }
-        ;
         this.isValid = true;
     }
 
@@ -170,7 +169,6 @@ export class ValidationGroup {
             var validatorProperty = this.validationProperties[i];
             validatorProperty.validateCurrentValue(true);
         }
-        ;
         return this.isValid;
     }
 
@@ -265,7 +263,7 @@ export class ValidationProperty {
 
     addValidationRule(validationRule) {
         if (validationRule.validate === undefined) //Can ES6 check on base class??
-            throw new exception("That's not a valid validationRule");
+            throw new Exception("That's not a valid validationRule");
         this.validationRules.push(validationRule);
         this.validateCurrentValue(false);
     }
@@ -291,7 +289,6 @@ export class ValidationProperty {
                     break;
                 }
             }
-            ;
         }
 
         var notifyObservers = (!this.isDirty && shouldBeDirty) || (this.isValid !== shouldBeValid) || (this.message !== shouldBeMessage);
@@ -393,9 +390,6 @@ export class NumericValidationRule extends ValidationRule {
             },
             (newValue) => {
                 var floatValue = parseFloat(newValue);
-
-                var numeric = !Number.isNaN(parseFloat(newValue));
-                var finite = Number.isFinite(newValue);
                 return !Number.isNaN(parseFloat(floatValue)) && Number.isFinite(floatValue);
             }
         );
@@ -410,8 +404,7 @@ export class RegexValidationRule extends ValidationRule {
                 return `not a valid value`;
             },
             (newValue, regex) => {
-                var match = regex.test(newValue);
-                return match;
+                return regex.test(newValue);
             }
         );
     }

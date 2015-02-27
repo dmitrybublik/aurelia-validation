@@ -57,7 +57,7 @@ describe('Basic validation tests: notempty', () => {
   it('should not fail on an array with empty element', () => {
     var subject = TestSubject.createInstance(['']);
     expect(subject.validation.isValid).toBe(true);
-  })
+  });
 
 
   it('should not fail if value is a function', () => {
