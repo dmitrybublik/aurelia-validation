@@ -322,7 +322,7 @@ export class ValidationRule {
 
     constructor(treshold, message, onValidate) {
         this.onValidate = onValidate;
-        this.treshold = treshold;
+        this.threshold = treshold;
         this.message = message;
         this.errorMessage = null;
     }
@@ -345,12 +345,12 @@ export class ValidationRule {
                 currentValue = currentValue.replace(/^\s+|\s+$/g, '');
             }
         }
-        var result = this.onValidate(currentValue, this.treshold);
+        var result = this.onValidate(currentValue, this.threshold);
         if (result) {
             this.errorMessage = null;
         }
         else {
-            this.errorMessage = this.message(currentValue, this.treshold);
+            this.errorMessage = this.message(currentValue, this.threshold);
         }
         return result;
     }

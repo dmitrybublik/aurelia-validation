@@ -439,7 +439,7 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
           _classCallCheck(this, ValidationRule);
 
           this.onValidate = onValidate;
-          this.treshold = treshold;
+          this.threshold = treshold;
           this.message = message;
           this.errorMessage = null;
         }
@@ -468,11 +468,11 @@ System.register(["aurelia-binding", "aurelia-templating"], function (_export) {
                   currentValue = currentValue.replace(/^\s+|\s+$/g, "");
                 }
               }
-              var result = this.onValidate(currentValue, this.treshold);
+              var result = this.onValidate(currentValue, this.threshold);
               if (result) {
                 this.errorMessage = null;
               } else {
-                this.errorMessage = this.message(currentValue, this.treshold);
+                this.errorMessage = this.message(currentValue, this.threshold);
               }
               return result;
             },

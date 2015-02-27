@@ -1,4 +1,4 @@
-import {ObserverLocator} from 'aurelia-binding';
+import {ObserverLocator} from 'aurelia-binding'
 import {Behavior} from 'aurelia-templating';
 
 export class ValidateAttachedBehavior {
@@ -236,6 +236,7 @@ export class ValidationGroup {
     passes(validationRule) {
         var validationProperty = this.validationProperties[this.validationProperties.length - 1];
         validationProperty.addValidationRule(validationRule);
+        return this;
     }
 }
 export class ValidationProperty {
@@ -263,7 +264,7 @@ export class ValidationProperty {
 
     addValidationRule(validationRule) {
         if (validationRule.validate === undefined) //Can ES6 check on base class??
-            throw new Exception("That's not a valid validationRule");
+            throw new exception("That's not a valid validationRule");
         this.validationRules.push(validationRule);
         this.validateCurrentValue(false);
     }
@@ -317,9 +318,9 @@ export class ValidationProperty {
 
 export class ValidationRule {
 
-    constructor(treshold, message, onValidate) {
+    constructor(threshold, message, onValidate) {
         this.onValidate = onValidate;
-        this.treshold = treshold;
+        this.threshold = threshold;
         this.message = message;
         this.errorMessage = null;
     }
@@ -342,12 +343,12 @@ export class ValidationRule {
                 currentValue = currentValue.replace(/^\s+|\s+$/g, '');
             }
         }
-        var result = this.onValidate(currentValue, this.treshold);
+        var result = this.onValidate(currentValue, this.threshold);
         if (result) {
             this.errorMessage = null;
         }
         else {
-            this.errorMessage = this.message(currentValue, this.treshold);
+            this.errorMessage = this.message(currentValue, this.threshold);
         }
         return result;
     }
@@ -390,6 +391,9 @@ export class NumericValidationRule extends ValidationRule {
             },
             (newValue) => {
                 var floatValue = parseFloat(newValue);
+
+                var numeric = !Number.isNaN(parseFloat(newValue));
+                var finite = Number.isFinite(newValue);
                 return !Number.isNaN(parseFloat(floatValue)) && Number.isFinite(floatValue);
             }
         );
@@ -404,7 +408,8 @@ export class RegexValidationRule extends ValidationRule {
                 return `not a valid value`;
             },
             (newValue, regex) => {
-                return regex.test(newValue);
+                var match = regex.test(newValue);
+                return match;
             }
         );
     }
@@ -445,19 +450,19 @@ export class EqualityRule extends ValidationRule {
                 equality: equality,
                 otherValueLabel: otherValueLabel
             },
-            (newValue, treshold) => {
-                if (treshhold.otherValueLabel)
-                    if (treshhold.equality)
-                        return `does not match ${treshold.otherValueLabel}`;
+            (newValue, threshold) => {
+                if (threshold.otherValueLabel)
+                    if (threshold.equality)
+                        return `does not match ${threshold.otherValueLabel}`;
                     else
-                        return `cannot not match ${treshold.otherValueLabel}`;
-                else if (treshhold.equality)
-                    return `should be ${treshold.otherValue}`;
+                        return `cannot not match ${threshold.otherValueLabel}`;
+                else if (threshold.equality)
+                    return `should be ${threshold.otherValue}`;
                 else
-                    return `cannot not be ${treshold.otherValue}`;
+                    return `cannot not be ${threshold.otherValue}`;
             },
-            (newValue, treshold) => {
-                return treshold.equality === (newValue === treshold.otherValue);
+            (newValue, threshold) => {
+                return threshold.equality === (newValue === threshold.otherValue);
             }
         );
     }

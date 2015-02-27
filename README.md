@@ -231,7 +231,7 @@ Validates that the value entered is valid according to the provided *regexString
 Validates that the value entered is valid according to the provided *regex* (RegExp).
 
 ####withMessage(message)
-Adds a custom message for the previously appended validation rule. **message** is a function that generally takes two arguments: **newValue** (the value that has been evaluated) and **treshold**.
+Adds a custom message for the previously appended validation rule. **message** is a function that generally takes two arguments: **newValue** (the value that has been evaluated) and **threshold**.
 
 ####passes(validationRule)
 Validated that the message passes the provided *validationRule* (ValidationRule). See **custom validation**.
@@ -248,8 +248,8 @@ export class MiminumLengthValidationRule extends ValidationRule{
 	constructor (minimumLength) {
 		super(
 			minimumLength,
-			(newValue, treshold) => { 
-				return `needs to be at least ${treshold} characters long`;
+			(newValue, threshold) => {
+				return `needs to be at least ${threshold} characters long`;
 			},
 			(newValue, minimumLength) => {
 				 return newValue.length !== undefined && newValue.length >= minimumLength;
@@ -259,12 +259,12 @@ export class MiminumLengthValidationRule extends ValidationRule{
 }
 ```
 The ValidationRule base class needs three constructor arguments:
-- **treshold**: any javascript object that will be used as the 'treshold'. 
-- **message**: a javascript function that takes two arguments (**newValue**: the current value that was evaluated, and **treshold**: the javascript object that you passed earlier) and returns a string that's used as the message when the property is not valid
-- **onValidate**: a javascript function that takes two arguments (**newValue**: the current value that needs to be evaluated, and **treshold**: the javascript object that you passed earlier).
+- **threshold**: any javascript object that will be used as the 'threshold'.
+- **message**: a javascript function that takes two arguments (**newValue**: the current value that was evaluated, and **threshold**: the javascript object that you passed earlier) and returns a string that's used as the message when the property is not valid
+- **onValidate**: a javascript function that takes two arguments (**newValue**: the current value that needs to be evaluated, and **threshold**: the javascript object that you passed earlier).
 
 
->Note: It's not needed to name your variables **newValue** and **treshold**, but if you don't, then custom (*withMessage*) or localized messages will not properly work.
+>Note: It's not needed to name your variables **newValue** and **threshold**, but if you don't, then custom (*withMessage*) or localized messages will not properly work.
 
 ####Custom validation functions
 In addition to calling *passed(myCustomValidationRule)*, you can add custom validation functions to the **ValidationGroup** object's prototype.
@@ -289,7 +289,7 @@ export class App {
     ValidationGroup.prototype.SSN = function()
     {
       this.matches(/^[0-9]{3}\-?[0-9]{2}\-?[0-9]{4}$/)
-          .withMessage((newValue, treshold) => {return `not a valid SSN`;});
+          .withMessage((newValue, threshold) => {return `not a valid SSN`;});
       return this;
     }
 
