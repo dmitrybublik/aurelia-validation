@@ -1,4 +1,3 @@
-//import {Behavior} from 'aurelia-framework';
 import {ObserverLocator} from 'aurelia-binding';
 import {Validation} from '../src/validation/validation';
 

@@ -5,7 +5,7 @@
 aurelia-validation is a small validation plugin for [aurelia.io](http://aurelia.io) that uses a fluent API (currently in alpha, **API is subject to change**).
 ``` javascript
 this.validation = validation.on(this)
-                      .ensure('isAwesome')
+                      .ensure('awesomeLevel')
                             .min(9000)
                       .ensure('readMe')
                             .notEmpty()
@@ -201,7 +201,10 @@ Empty means null, undefined, '', or if it has a length property (arrays and stri
 Validates that the value entered is greater than or equal to the provided *minimumValue*.
 
 ####maximum(maximumValue)
-Validates that the value entered is strictly smaller than the provided *minimumValue*.
+Validates that the value entered is strictly smaller than the provided *maximumValue*.
+
+####between(minimumValue, maximumValue)
+Validates that the value entered is greater than or equal to the provided *minimumValue* and strictly smaller than the provided *maximumValue*.
 
 ####equals(otherValue, otherValueLabel)
 Validates that the value entered equals the *otherValue*. 
@@ -214,11 +217,14 @@ Optionally takes an *otherValueLabel*, which will be used in the error message.
 ####email()
 Validates that the value entered is a properly formed email address. 
 
-####minLength(minimumValue)
-Validates that the length of the value entered is greater than or equal to the provided *minimumValue*.
+####minLength(minimumLength)
+Validates that the length of the value entered is greater than or equal to the provided *minimumLength*.
 
-####maxLength(maximumValue)
-Validates that the length of the value entered is strictly less than the provided *minimumValue*.
+####maxLength(maximumLength)
+Validates that the length of the value entered is strictly less than the provided *maximumLength*.
+
+####betweenLength(minimumLength, maximumLength)
+Validates that the length of the value entered is greater than or equal to the provided *minimumLength* and strictly less than the provided *maximumLength*.
 
 ####isNumeric()
 Validates that the value entered is numeric.
@@ -244,7 +250,7 @@ If you need a complex validation rule, you can extract that into a seperate clas
 For example:
 ``` javascript
 import {ValidationRule} from './plugins/validation/'; 
-export class MiminumLengthValidationRule extends ValidationRule{
+export class MinimumLengthValidationRule extends ValidationRule{
 	constructor (minimumLength) {
 		super(
 			minimumLength,

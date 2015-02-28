@@ -183,12 +183,18 @@ export class ValidationGroup {
     }
 
     minimum(minimumValue) {
-        this.passes(new MinimumValueRule(minimumValue));
+        this.passes(new MinimumValueValidationRule(minimumValue));
+        return this;
+    }
+    between(minimumValue, maximumValue)
+    {
+        this.passes(new BetweenValueValidationRule(minimumValue, maximumValue));
         return this;
     }
 
+
     maximum(maximumValue) {
-        this.passes(new MaximumValueRule(maximumValue));
+        this.passes(new MaximumValueValidationRule(maximumValue));
         return this;
     }
 
@@ -207,13 +213,21 @@ export class ValidationGroup {
         return this;
     }
 
+
+
     minLength(minimumValue) {
-        this.passes(new MiminumLengthValidationRule(minimumValue));
+        this.passes(new MinimumLengthValidationRule(minimumValue));
         return this;
     }
 
     maxLength(maximumValue) {
         this.passes(new MaximumLengthValidationRule(maximumValue));
+        return this;
+    }
+
+    betweenLength(minimumValue, maximumValue)
+    {
+        this.passes(new BetweenLengthValidationRule(minimumValue, maximumValue));
         return this;
     }
 
@@ -354,7 +368,7 @@ export class ValidationRule {
     }
 }
 
-export class MiminumLengthValidationRule extends ValidationRule {
+export class MinimumLengthValidationRule extends ValidationRule {
     constructor(minimumLength) {
         super(
             minimumLength,
@@ -377,6 +391,22 @@ export class MaximumLengthValidationRule extends ValidationRule {
             },
             (newValue, maximumLength) => {
                 return newValue.length !== undefined && newValue.length < maximumLength;
+            }
+        );
+    }
+}
+
+export class BetweenLengthValidationRule extends ValidationRule {
+    constructor(minimumLength, maximumLength) {
+        super(
+            { minimumLength : minimumLength, maximumLength : maximumLength },
+            (newValue, threshold) => {
+                return `needs to be at between ${threshold.minimumLength} and ${threshold.maximumLength} characters long`;
+            },
+            (newValue, threshold) => {
+                return newValue.length !== undefined
+                    && newValue.length >= threshold.minimumLength
+                    && newValue.length < threshold.maximumLength;
             }
         );
     }
@@ -408,14 +438,13 @@ export class RegexValidationRule extends ValidationRule {
                 return `not a valid value`;
             },
             (newValue, regex) => {
-                var match = regex.test(newValue);
-                return match;
+                return regex.test(newValue);
             }
         );
     }
 }
 
-export class MinimumValueRule extends ValidationRule {
+export class MinimumValueValidationRule extends ValidationRule {
     constructor(minimumValue) {
         super(
             minimumValue,
@@ -428,7 +457,7 @@ export class MinimumValueRule extends ValidationRule {
         );
     }
 }
-export class MaximumValueRule extends ValidationRule {
+export class MaximumValueValidationRule extends ValidationRule {
     constructor(maximumValue) {
         super(
             maximumValue,
@@ -442,10 +471,24 @@ export class MaximumValueRule extends ValidationRule {
     }
 }
 
+export class BetweenValueValidationRule extends ValidationRule {
+    constructor(minimumValue, maximumValue) {
+        super(
+            { minimumValue : minimumValue, maximumValue : maximumValue},
+            (newValue, threshold) => {
+                return `needs to be between ${threshold.minimumValue} and ${threshold.maximumValue}`;
+            },
+            (newValue, threshold) => {
+                return threshold.minimumValue <= newValue && newValue < threshold.maximumValue;
+            }
+        );
+    }
+}
+
 export class EqualityRule extends ValidationRule {
     constructor(otherValue, equality, otherValueLabel) {
         super(
-            new {
+            {
                 otherValue: otherValue,
                 equality: equality,
                 otherValueLabel: otherValueLabel
