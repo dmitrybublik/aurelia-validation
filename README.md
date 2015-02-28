@@ -193,9 +193,9 @@ This is why I prefer the **validation.checkAll()** function. When it is called, 
 
 ####notEmpty()
 This is a special case, dictating that the field is 'required' and cannot be empty.
-Empty means null, undefined, '', or if it has a length property (arrays and strings) that the length is > 0.
+Empty means null, undefined, '', or if it has a length property (arrays and strings) that the length is 0.
 >Note: strings are always trimmed before they evaluated.
->The notEmpty rule is always checked first before any other validation rule.  This means that without the notEmpty rule, the .minLength(5) rule would consider a value of '123456' as valid because the field is allowed to be empty.
+>The notEmpty rule is always checked first before any other validation rule.  This means that without the notEmpty rule, the .minLength(5) rule would still consider a value of '' as valid because the field is allowed to be empty.
 
 ####minimum(minimumValue)
 Validates that the value entered is greater than or equal to the provided *minimumValue*.
