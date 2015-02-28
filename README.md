@@ -273,7 +273,7 @@ The ValidationRule base class needs three constructor arguments:
 >Note: It's not needed to name your variables **newValue** and **threshold**, but if you don't, then custom (*withMessage*) or localized messages will not properly work.
 
 ####Custom validation functions
-In addition to calling *passed(myCustomValidationRule)*, you can add custom validation functions to the **ValidationGroup** object's prototype.
+In addition to calling *passes(myCustomValidationRule)*, you can add custom validation functions to the **ValidationGroup** object's prototype.
 
 ``` javascript
 import {Router} from 'aurelia-router';
