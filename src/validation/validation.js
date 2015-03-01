@@ -209,7 +209,7 @@ export class ValidationGroup {
     }
 
     email() {
-        this.passes(new RegexValidationRule(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/));
+        this.passes(new EmailValidationRule());
         return this;
     }
 
@@ -232,7 +232,6 @@ export class ValidationGroup {
     }
 
     isNumeric() {
-        this.matches(/(^-?\d\d*\.\d*$)|(^-?\d\d*$)|(^-?\.\d\d*$)/);
         this.passes(new NumericValidationRule());
         return this;
     }
@@ -368,6 +367,21 @@ export class ValidationRule {
     }
 }
 
+export class EmailValidationRule extends ValidationRule {
+    constructor() {
+        this.emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+        super(
+            null,
+            (newValue, threshold) => {
+                return `not a valid email address`;
+            },
+            (newValue, threshold) => {
+                return this.emailRegex.test(newValue);
+            }
+        );
+    }
+}
+
 export class MinimumLengthValidationRule extends ValidationRule {
     constructor(minimumLength) {
         super(
@@ -414,6 +428,8 @@ export class BetweenLengthValidationRule extends ValidationRule {
 
 export class NumericValidationRule extends ValidationRule {
     constructor() {
+        this.numericRegex = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
+
         super(
             null,
             (newValue) => {
@@ -421,10 +437,9 @@ export class NumericValidationRule extends ValidationRule {
             },
             (newValue) => {
                 var floatValue = parseFloat(newValue);
-
-                var numeric = !Number.isNaN(parseFloat(newValue));
-                var finite = Number.isFinite(newValue);
-                return !Number.isNaN(parseFloat(floatValue)) && Number.isFinite(floatValue);
+                return !Number.isNaN(parseFloat(floatValue))
+                    && Number.isFinite(floatValue)
+                    && this.numericRegex.test(newValue);
             }
         );
     }

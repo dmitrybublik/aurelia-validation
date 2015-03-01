@@ -1,7 +1,6 @@
 import {ObserverLocator} from 'aurelia-binding';
 import {Validation} from '../src/validation/validation';
 
-console.log('Basic validation tests');
 
 class TestSubject {
   constructor(validation, firstName){
