@@ -102,4 +102,3 @@ describe('Basic validation tests: notempty', () => {
     expect(subject.validation.checkAll()).toBe(false);
   });
 });
-

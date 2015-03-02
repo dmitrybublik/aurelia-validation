@@ -199,12 +199,12 @@ export class ValidationGroup {
     }
 
     equals(otherValue, otherValueLabel) {
-        this.passes(new EqualityRule(otherValue, true, otherValueLabel));
+        this.passes(new EqualityValidationRule(otherValue, true, otherValueLabel));
         return this;
     }
 
     notEquals(otherValue, otherValueLabel) {
-        this.passes(new EqualityRule(otherValue, false, otherValueLabel));
+        this.passes(new EqualityValidationRule(otherValue, false, otherValueLabel));
         return this;
     }
 
@@ -233,6 +233,26 @@ export class ValidationGroup {
 
     isNumeric() {
         this.passes(new NumericValidationRule());
+        return this;
+    }
+
+    isDigit(){
+        this.passes(new DigitValidationRule());
+        return this;
+    }
+
+    isAlphanumeric(){
+        this.passes(new AlphaNumericValidationRule());
+        return this;
+    }
+
+    isAlphanumericOrWhitespace(){
+        this.passes(new AlphaNumericOrWhitespaceValidationRule());
+        return this;
+    }
+
+    isStrongPassword(minimumComplexityLevel){
+        this.passes(new StrongPasswordValidationRule(minimumComplexityLevel));
         return this;
     }
 
@@ -500,7 +520,87 @@ export class BetweenValueValidationRule extends ValidationRule {
     }
 }
 
-export class EqualityRule extends ValidationRule {
+export class DigitValidationRule extends ValidationRule {
+    constructor() {
+        this.digitRegex = /^\d+$/;
+        super(
+            null,
+            (newValue, threshold) => {
+                return `can contain only digits`;
+            },
+            (newValue, threshold) => {
+                return this.digitRegex.test(newValue);
+            }
+        );
+    }
+}
+
+export class AlphaNumericValidationRule extends ValidationRule
+{
+    constructor() {
+        this.alphaNumericRegex = /^[a-z0-9]+$/i;
+        super(
+            null,
+            (newValue, threshold) => {
+                return `can contain only alphanumerical characters`;
+            },
+            (newValue, threshold) => {
+                return this.alphaNumericRegex.test(newValue);
+            }
+        );
+    }
+}
+
+
+export class AlphaNumericOrWhitespaceValidationRule extends ValidationRule
+{
+    constructor() {
+        this.alphaNumericRegex = /^[a-z0-9\s]+$/i;
+        super(
+            null,
+            (newValue, threshold) => {
+                return `can contain only alphanumerical characters or spaces`;
+            },
+            (newValue, threshold) => {
+                return this.alphaNumericRegex.test(newValue);
+            }
+        );
+    }
+}
+
+
+export class StrongPasswordValidationRule extends ValidationRule
+{
+    constructor(minimumComplexityLevel) {
+        var complexityLevel = 4;
+        if(minimumComplexityLevel && minimumComplexityLevel > 1 && minimumComplexityLevel < 4)
+            complexityLevel = minimumComplexityLevel;
+
+
+        super(
+            complexityLevel,
+            (newValue, threshold) => {
+                if(threshold == 4)
+                    return `should contain a combination of lowercase letters, uppercase letters, digits and special characters`;
+                else
+                    return `should contain at least ${threshold} of the following groups: lowercase letters, uppercase letters, digits and special characters`;
+            },
+            (newValue, threshold) => {
+                if (typeof (newValue) !== 'string')
+                    return false;
+                var strength = 0;
+
+                strength += /[A-Z]+/.test(newValue) ? 1 : 0;
+                strength += /[a-z]+/.test(newValue) ? 1 : 0;
+                strength += /[0-9]+/.test(newValue) ? 1 : 0;
+                strength += /[\W]+/.test(newValue) ? 1 : 0;
+                return strength >= threshold;
+            }
+        );
+    }
+}
+
+export class EqualityValidationRule extends ValidationRule {
     constructor(otherValue, equality, otherValueLabel) {
         super(
             {
@@ -520,6 +620,8 @@ export class EqualityRule extends ValidationRule {
                     return `cannot not be ${threshold.otherValue}`;
             },
             (newValue, threshold) => {
+                if(newValue instanceof Date && threshold.otherValue instanceof Date)
+                    return threshold.equality === (newValue.getTime() === threshold.otherValue.getTime());
                 return threshold.equality === (newValue === threshold.otherValue);
             }
         );
