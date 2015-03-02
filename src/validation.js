@@ -1,5 +1,7 @@
 export * from './validation/validation';
-import {ValidateAttachedBehavior} from './validation/validation'
+export * from './validation/validateAttachedBehavior';
+
+import {ValidateAttachedBehavior} from './validation/validateAttachedBehavior'
 
 export function install(aurelia)
 {

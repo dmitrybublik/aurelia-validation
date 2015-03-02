@@ -1,4 +1,4 @@
-define(["exports", "./validation/validation"], function (exports, _validationValidation) {
+define(["exports", "./validation/validation", "./validation/validateAttachedBehavior"], function (exports, _validationValidation, _validationValidateAttachedBehavior) {
   "use strict";
 
   var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
@@ -8,7 +8,9 @@ define(["exports", "./validation/validation"], function (exports, _validationVal
   exports.install = install;
   _defaults(exports, _interopRequireWildcard(_validationValidation));
 
-  var ValidateAttachedBehavior = _validationValidation.ValidateAttachedBehavior;
+  _defaults(exports, _interopRequireWildcard(_validationValidateAttachedBehavior));
+
+  var ValidateAttachedBehavior = _validationValidateAttachedBehavior.ValidateAttachedBehavior;
   function install(aurelia) {
     aurelia.withResources(ValidateAttachedBehavior);
   }

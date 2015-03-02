@@ -9,124 +9,64 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 var ObserverLocator = require("aurelia-binding").ObserverLocator;
-var Behavior = require("aurelia-templating").Behavior;
-var ValidateAttachedBehavior = exports.ValidateAttachedBehavior = (function () {
-  function ValidateAttachedBehavior(element, observerLocator) {
-    _classCallCheck(this, ValidateAttachedBehavior);
+var ValidationLocaleRepository = exports.ValidationLocaleRepository = (function () {
+  function ValidationLocaleRepository() {
+    var lang = arguments[0] === undefined ? "en-US" : arguments[0];
+    _classCallCheck(this, ValidationLocaleRepository);
 
-    this.element = element;
-    this.observerLocator = observerLocator;
-    this.changedObservers = [];
+    load(lang);
   }
 
-  _prototypeProperties(ValidateAttachedBehavior, {
-    metadata: {
-      value: function metadata() {
-        return Behavior.attachedBehavior("validate");
-      },
-      writable: true,
-      configurable: true
-    },
-    inject: {
-      value: function inject() {
-        return [Element, ObserverLocator];
-      },
-      writable: true,
-      configurable: true
-    }
-  }, {
-    attached: {
-      value: function attached() {
-        this.subscribeChangedHandlers(this.element);
-      },
-      writable: true,
-      configurable: true
-    },
-    searchFormGroup: {
-      value: function searchFormGroup(currentElement, currentDepth) {
-        if (currentDepth === 5) {
-          return null;
-        }
-        if (currentElement.classList.contains("form-group")) {
-          return currentElement;
-        }
-        return this.searchFormGroup(currentElement.parentNode, 1 + currentDepth);
-      },
-      writable: true,
-      configurable: true
-    },
-    subscribeChangedHandlers: {
-      value: function subscribeChangedHandlers(currentElement) {
-        var _this = this;
-        var atts = currentElement.attributes;
-        if (atts["value.bind"]) {
-          var bindingValue = atts["value.bind"].value;
-          for (var i = 0; i < this.value.validationProperties.length; i++) {
-            var validationProperty = this.value.validationProperties[i];
-            if (validationProperty.propertyName === bindingValue) {
-              validationProperty.onValidate(function (validationProperty) {
-                var formGroup = _this.searchFormGroup(currentElement, 0);
-                if (formGroup) {
-                  if (validationProperty.isValid) {
-                    formGroup.classList.remove("has-warning");
-                    formGroup.classList.add("has-success");
-                  } else {
-                    formGroup.classList.remove("has-success");
-                    formGroup.classList.add("has-warning");
-                  }
-
-                  var labels = currentElement.labels;
-                  for (var ii = 0; ii < labels.length; ii++) {
-                    var label = labels[i];
-                    var helpBlock = label.nextSibling;
-                    if (helpBlock) {
-                      if (!helpBlock.classList) {
-                        helpBlock = null;
-                      } else if (!helpBlock.classList.contains("aurelia-validation-message")) {
-                        helpBlock = null;
-                      }
-                    }
-
-                    if (!helpBlock) {
-                      helpBlock = document.createElement("p");
-                      helpBlock.classList.add("help-block");
-                      helpBlock.classList.add("aurelia-validation-message");
-
-                      if (label.nextSibling) {
-                        label.parentNode.insertBefore(helpBlock, label.nextSibling);
-                      } else {
-                        label.parentNode.appendChild(helpBlock);
-                      }
-                    }
-
-                    helpBlock.textContent = validationProperty.message;
-                  }
-                }
-              });
-            }
+  _prototypeProperties(ValidationLocaleRepository, null, {
+    loadResource: {
+      value: function loadResource() {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+          if (self.data !== null) {
+            resolve(true);
+            return;
           }
-        }
-        var children = currentElement.children;
-        for (var i = 0; i < children.length; i++) {
-          this.subscribeChangedHandlers(children[i]);
-        }
+
+          System["import"]("./src/resources/" + self.activeLanguage).then(function (resource) {
+            self.data = resource.data;
+            resolve(true);
+          });
+        });
       },
       writable: true,
       configurable: true
     },
-    detached: {
-      value: function detached() {
-        for (var i = 0; i < this.changedObservers.length; i++) {
-          this.changedObservers[i]();
-        }
-        this.changedObservers = [];
+    reset: {
+      value: function reset() {
+        load("en-US");
+      },
+      writable: true,
+      configurable: true
+    },
+    load: {
+      value: function load(lang) {
+        this.activeLanguage = lang;
+        this.data = null;
+        this.loadResource();
+      },
+      writable: true,
+      configurable: true
+    },
+    tr: {
+      value: function tr(what) {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+          self.loadResource().then(function (response) {
+            resolve(self.data[what]);
+          });
+        });
       },
       writable: true,
       configurable: true
     }
   });
 
-  return ValidateAttachedBehavior;
+  return ValidationLocaleRepository;
 })();
 var Validation = exports.Validation = (function () {
   function Validation(observerLocator) {
@@ -146,37 +86,7 @@ var Validation = exports.Validation = (function () {
   }, {
     on: {
       value: function on(subject) {
-        return new ValidationGroup(subject, this.observerLocator, this);
-      },
-      writable: true,
-      configurable: true
-    },
-    isEmptyValue: {
-      value: function isEmptyValue(val) {
-        if (typeof val === "function") {
-          return this.isEmptyValue(val());
-        }
-        if (val === undefined) {
-          return true;
-        }
-        if (val === null) {
-          return true;
-        }
-        if (val === "") {
-          return true;
-        }
-        if (typeof val === "string") {
-          if (String.prototype.trim) {
-            val = val.trim();
-          } else {
-            val = val.replace(/^\s+|\s+$/g, "");
-          }
-        }
-
-        if (val.length !== undefined) {
-          return 0 === val.length;
-        }
-        return false;
+        return new ValidationGroup(subject, this.observerLocator);
       },
       writable: true,
       configurable: true
@@ -185,15 +95,47 @@ var Validation = exports.Validation = (function () {
 
   return Validation;
 })();
+
+
+Validation.Utilities = {
+  isEmptyValue: function isEmptyValue(val) {
+    if (typeof val === "function") {
+      return this.isEmptyValue(val());
+    }
+    if (val === undefined) {
+      return true;
+    }
+    if (val === null) {
+      return true;
+    }
+    if (val === "") {
+      return true;
+    }
+    if (typeof val === "string") {
+      if (String.prototype.trim) {
+        val = val.trim();
+      } else {
+        val = val.replace(/^\s+|\s+$/g, "");
+      }
+    }
+
+    if (val.length !== undefined) {
+      return 0 === val.length;
+    }
+    return false;
+  }
+};
+Validation.Locale = new ValidationLocaleRepository();
+
+
 var ValidationGroup = exports.ValidationGroup = (function () {
-  function ValidationGroup(subject, observerLocator, validationUtilities) {
+  function ValidationGroup(subject, observerLocator) {
     _classCallCheck(this, ValidationGroup);
 
     this.observerLocator = observerLocator;
     this.isValid = true;
     this.subject = subject;
     this.validationProperties = [];
-    this.validationUtilities = validationUtilities;
   }
 
   _prototypeProperties(ValidationGroup, null, {
@@ -206,7 +148,6 @@ var ValidationGroup = exports.ValidationGroup = (function () {
             return;
           }
         }
-        ;
         this.isValid = true;
       },
       writable: true,
@@ -218,7 +159,6 @@ var ValidationGroup = exports.ValidationGroup = (function () {
           var validatorProperty = this.validationProperties[i];
           validatorProperty.validateCurrentValue(true);
         }
-        ;
         return this.isValid;
       },
       writable: true,
@@ -226,7 +166,7 @@ var ValidationGroup = exports.ValidationGroup = (function () {
     },
     ensure: {
       value: function ensure(propertyName) {
-        this.validationProperties.push(new ValidationProperty(this.observerLocator, propertyName, this, this.validationUtilities));
+        this.validationProperties.push(new ValidationProperty(this.observerLocator, propertyName, this));
         return this;
       },
       writable: true,
@@ -242,7 +182,15 @@ var ValidationGroup = exports.ValidationGroup = (function () {
     },
     minimum: {
       value: function minimum(minimumValue) {
-        this.passes(new MinimumValueRule(minimumValue));
+        this.passes(new MinimumValueValidationRule(minimumValue));
+        return this;
+      },
+      writable: true,
+      configurable: true
+    },
+    between: {
+      value: function between(minimumValue, maximumValue) {
+        this.passes(new BetweenValueValidationRule(minimumValue, maximumValue));
         return this;
       },
       writable: true,
@@ -250,7 +198,7 @@ var ValidationGroup = exports.ValidationGroup = (function () {
     },
     maximum: {
       value: function maximum(maximumValue) {
-        this.passes(new MaximumValueRule(maximumValue));
+        this.passes(new MaximumValueValidationRule(maximumValue));
         return this;
       },
       writable: true,
@@ -258,7 +206,7 @@ var ValidationGroup = exports.ValidationGroup = (function () {
     },
     equals: {
       value: function equals(otherValue, otherValueLabel) {
-        this.passes(new EqualityRule(otherValue, true, otherValueLabel));
+        this.passes(new EqualityValidationRule(otherValue, true, otherValueLabel));
         return this;
       },
       writable: true,
@@ -266,7 +214,7 @@ var ValidationGroup = exports.ValidationGroup = (function () {
     },
     notEquals: {
       value: function notEquals(otherValue, otherValueLabel) {
-        this.passes(new EqualityRule(otherValue, false, otherValueLabel));
+        this.passes(new EqualityValidationRule(otherValue, false, otherValueLabel));
         return this;
       },
       writable: true,
@@ -274,7 +222,7 @@ var ValidationGroup = exports.ValidationGroup = (function () {
     },
     email: {
       value: function email() {
-        this.passes(new RegexValidationRule(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/));
+        this.passes(new EmailValidationRule());
         return this;
       },
       writable: true,
@@ -282,7 +230,7 @@ var ValidationGroup = exports.ValidationGroup = (function () {
     },
     minLength: {
       value: function minLength(minimumValue) {
-        this.passes(new MiminumLengthValidationRule(minimumValue));
+        this.passes(new MinimumLengthValidationRule(minimumValue));
         return this;
       },
       writable: true,
@@ -296,10 +244,49 @@ var ValidationGroup = exports.ValidationGroup = (function () {
       writable: true,
       configurable: true
     },
+    betweenLength: {
+      value: function betweenLength(minimumValue, maximumValue) {
+        this.passes(new BetweenLengthValidationRule(minimumValue, maximumValue));
+        return this;
+      },
+      writable: true,
+      configurable: true
+    },
     isNumeric: {
       value: function isNumeric() {
-        this.matches(/(^-?\d\d*\.\d*$)|(^-?\d\d*$)|(^-?\.\d\d*$)/);
         this.passes(new NumericValidationRule());
+        return this;
+      },
+      writable: true,
+      configurable: true
+    },
+    isDigit: {
+      value: function isDigit() {
+        this.passes(new DigitValidationRule());
+        return this;
+      },
+      writable: true,
+      configurable: true
+    },
+    isAlphanumeric: {
+      value: function isAlphanumeric() {
+        this.passes(new AlphaNumericValidationRule());
+        return this;
+      },
+      writable: true,
+      configurable: true
+    },
+    isAlphanumericOrWhitespace: {
+      value: function isAlphanumericOrWhitespace() {
+        this.passes(new AlphaNumericOrWhitespaceValidationRule());
+        return this;
+      },
+      writable: true,
+      configurable: true
+    },
+    isStrongPassword: {
+      value: function isStrongPassword(minimumComplexityLevel) {
+        this.passes(new StrongPasswordValidationRule(minimumComplexityLevel));
         return this;
       },
       writable: true,
@@ -325,6 +312,7 @@ var ValidationGroup = exports.ValidationGroup = (function () {
       value: function passes(validationRule) {
         var validationProperty = this.validationProperties[this.validationProperties.length - 1];
         validationProperty.addValidationRule(validationRule);
+        return this;
       },
       writable: true,
       configurable: true
@@ -334,11 +322,10 @@ var ValidationGroup = exports.ValidationGroup = (function () {
   return ValidationGroup;
 })();
 var ValidationProperty = exports.ValidationProperty = (function () {
-  function ValidationProperty(observerLocator, propertyName, validationGroup, validationUtilities) {
-    var _this = this;
+  function ValidationProperty(observerLocator, propertyName, validationGroup) {
+    var _this2 = this;
     _classCallCheck(this, ValidationProperty);
 
-    this.validationUtilities = validationUtilities;
     this.propertyName = propertyName;
     this.validationGroup = validationGroup;
     this.isValid = true;
@@ -349,7 +336,7 @@ var ValidationProperty = exports.ValidationProperty = (function () {
     this.observer = observerLocator.getObserver(validationGroup.subject, propertyName);
 
     this.observer.subscribe(function (newValue, oldValue) {
-      _this.validate(newValue, true);
+      _this2.validate(newValue, true);
     });
     this.isDirty = false;
   }
@@ -382,9 +369,9 @@ var ValidationProperty = exports.ValidationProperty = (function () {
       value: function validate(newValue, shouldBeDirty) {
         var shouldBeValid = true;
         var shouldBeMessage = "";
-        if (this.validationUtilities.isEmptyValue(newValue)) {
+        if (Validation.Utilities.isEmptyValue(newValue)) {
           shouldBeValid = !this.isRequired;
-          shouldBeMessage = "is required";
+          shouldBeMessage = Validation.Locale.tr("isRequired");
         } else {
           for (var i = 0; i < this.validationRules.length; i++) {
             var rule = this.validationRules[i];
@@ -394,7 +381,6 @@ var ValidationProperty = exports.ValidationProperty = (function () {
               break;
             }
           }
-          ;
         }
 
         var notifyObservers = !this.isDirty && shouldBeDirty || this.isValid !== shouldBeValid || this.message !== shouldBeMessage;
@@ -428,11 +414,11 @@ var ValidationProperty = exports.ValidationProperty = (function () {
   return ValidationProperty;
 })();
 var ValidationRule = exports.ValidationRule = (function () {
-  function ValidationRule(treshold, message, onValidate) {
+  function ValidationRule(threshold, message, onValidate) {
     _classCallCheck(this, ValidationRule);
 
     this.onValidate = onValidate;
-    this.threshold = treshold;
+    this.threshold = threshold;
     this.message = message;
     this.errorMessage = null;
   }
@@ -476,20 +462,37 @@ var ValidationRule = exports.ValidationRule = (function () {
 
   return ValidationRule;
 })();
-var MiminumLengthValidationRule = exports.MiminumLengthValidationRule = (function (ValidationRule) {
-  function MiminumLengthValidationRule(minimumLength) {
-    _classCallCheck(this, MiminumLengthValidationRule);
+var EmailValidationRule = exports.EmailValidationRule = (function (ValidationRule) {
+  function EmailValidationRule() {
+    var _this2 = this;
+    _classCallCheck(this, EmailValidationRule);
 
-    _get(Object.getPrototypeOf(MiminumLengthValidationRule.prototype), "constructor", this).call(this, minimumLength, function (newValue, minimumLength) {
+    this.emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+    _get(Object.getPrototypeOf(EmailValidationRule.prototype), "constructor", this).call(this, null, function (newValue, threshold) {
+      return "not a valid email address";
+    }, function (newValue, threshold) {
+      return _this2.emailRegex.test(newValue);
+    });
+  }
+
+  _inherits(EmailValidationRule, ValidationRule);
+
+  return EmailValidationRule;
+})(ValidationRule);
+var MinimumLengthValidationRule = exports.MinimumLengthValidationRule = (function (ValidationRule) {
+  function MinimumLengthValidationRule(minimumLength) {
+    _classCallCheck(this, MinimumLengthValidationRule);
+
+    _get(Object.getPrototypeOf(MinimumLengthValidationRule.prototype), "constructor", this).call(this, minimumLength, function (newValue, minimumLength) {
       return "needs to be at least " + minimumLength + " characters long";
     }, function (newValue, minimumLength) {
       return newValue.length !== undefined && newValue.length >= minimumLength;
     });
   }
 
-  _inherits(MiminumLengthValidationRule, ValidationRule);
+  _inherits(MinimumLengthValidationRule, ValidationRule);
 
-  return MiminumLengthValidationRule;
+  return MinimumLengthValidationRule;
 })(ValidationRule);
 var MaximumLengthValidationRule = exports.MaximumLengthValidationRule = (function (ValidationRule) {
   function MaximumLengthValidationRule(maximumLength) {
@@ -506,18 +509,33 @@ var MaximumLengthValidationRule = exports.MaximumLengthValidationRule = (functio
 
   return MaximumLengthValidationRule;
 })(ValidationRule);
+var BetweenLengthValidationRule = exports.BetweenLengthValidationRule = (function (ValidationRule) {
+  function BetweenLengthValidationRule(minimumLength, maximumLength) {
+    _classCallCheck(this, BetweenLengthValidationRule);
+
+    _get(Object.getPrototypeOf(BetweenLengthValidationRule.prototype), "constructor", this).call(this, { minimumLength: minimumLength, maximumLength: maximumLength }, function (newValue, threshold) {
+      return "needs to be at between " + threshold.minimumLength + " and " + threshold.maximumLength + " characters long";
+    }, function (newValue, threshold) {
+      return newValue.length !== undefined && newValue.length >= threshold.minimumLength && newValue.length < threshold.maximumLength;
+    });
+  }
+
+  _inherits(BetweenLengthValidationRule, ValidationRule);
+
+  return BetweenLengthValidationRule;
+})(ValidationRule);
 var NumericValidationRule = exports.NumericValidationRule = (function (ValidationRule) {
   function NumericValidationRule() {
+    var _this2 = this;
     _classCallCheck(this, NumericValidationRule);
+
+    this.numericRegex = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
 
     _get(Object.getPrototypeOf(NumericValidationRule.prototype), "constructor", this).call(this, null, function (newValue) {
       return "must be a number";
     }, function (newValue) {
       var floatValue = parseFloat(newValue);
-
-      var numeric = !Number.isNaN(parseFloat(newValue));
-      var finite = Number.isFinite(newValue);
-      return !Number.isNaN(parseFloat(floatValue)) && Number.isFinite(floatValue);
+      return !Number.isNaN(parseFloat(floatValue)) && Number.isFinite(floatValue) && _this2.numericRegex.test(newValue);
     });
   }
 
@@ -532,8 +550,7 @@ var RegexValidationRule = exports.RegexValidationRule = (function (ValidationRul
     _get(Object.getPrototypeOf(RegexValidationRule.prototype), "constructor", this).call(this, regex, function (newValue, regex) {
       return "not a valid value";
     }, function (newValue, regex) {
-      var match = regex.test(newValue);
-      return match;
+      return regex.test(newValue);
     });
   }
 
@@ -541,54 +558,147 @@ var RegexValidationRule = exports.RegexValidationRule = (function (ValidationRul
 
   return RegexValidationRule;
 })(ValidationRule);
-var MinimumValueRule = exports.MinimumValueRule = (function (ValidationRule) {
-  function MinimumValueRule(minimumValue) {
-    _classCallCheck(this, MinimumValueRule);
+var MinimumValueValidationRule = exports.MinimumValueValidationRule = (function (ValidationRule) {
+  function MinimumValueValidationRule(minimumValue) {
+    _classCallCheck(this, MinimumValueValidationRule);
 
-    _get(Object.getPrototypeOf(MinimumValueRule.prototype), "constructor", this).call(this, minimumValue, function (newValue, minimumValue) {
+    _get(Object.getPrototypeOf(MinimumValueValidationRule.prototype), "constructor", this).call(this, minimumValue, function (newValue, minimumValue) {
       return "needs to be " + minimumValue + " or more";
     }, function (newValue, minimumValue) {
       return minimumValue <= newValue;
     });
   }
 
-  _inherits(MinimumValueRule, ValidationRule);
+  _inherits(MinimumValueValidationRule, ValidationRule);
 
-  return MinimumValueRule;
+  return MinimumValueValidationRule;
 })(ValidationRule);
-var MaximumValueRule = exports.MaximumValueRule = (function (ValidationRule) {
-  function MaximumValueRule(maximumValue) {
-    _classCallCheck(this, MaximumValueRule);
+var MaximumValueValidationRule = exports.MaximumValueValidationRule = (function (ValidationRule) {
+  function MaximumValueValidationRule(maximumValue) {
+    _classCallCheck(this, MaximumValueValidationRule);
 
-    _get(Object.getPrototypeOf(MaximumValueRule.prototype), "constructor", this).call(this, maximumValue, function (newValue, maximumValue) {
+    _get(Object.getPrototypeOf(MaximumValueValidationRule.prototype), "constructor", this).call(this, maximumValue, function (newValue, maximumValue) {
       return "needs to be less than " + maximumValue;
     }, function (newValue, maximumValue) {
       return newValue < maximumValue;
     });
   }
 
-  _inherits(MaximumValueRule, ValidationRule);
+  _inherits(MaximumValueValidationRule, ValidationRule);
 
-  return MaximumValueRule;
+  return MaximumValueValidationRule;
 })(ValidationRule);
-var EqualityRule = exports.EqualityRule = (function (ValidationRule) {
-  function EqualityRule(otherValue, equality, otherValueLabel) {
-    _classCallCheck(this, EqualityRule);
+var BetweenValueValidationRule = exports.BetweenValueValidationRule = (function (ValidationRule) {
+  function BetweenValueValidationRule(minimumValue, maximumValue) {
+    _classCallCheck(this, BetweenValueValidationRule);
 
-    _get(Object.getPrototypeOf(EqualityRule.prototype), "constructor", this).call(this, new {
-      otherValue: otherValue,
-      equality: equality,
-      otherValueLabel: otherValueLabel
-    }(), function (newValue, treshold) {
-      if (treshhold.otherValueLabel) if (treshhold.equality) return "does not match " + treshold.otherValueLabel;else return "cannot not match " + treshold.otherValueLabel;else if (treshhold.equality) return "should be " + treshold.otherValue;else return "cannot not be " + treshold.otherValue;
-    }, function (newValue, treshold) {
-      return treshold.equality === (newValue === treshold.otherValue);
+    _get(Object.getPrototypeOf(BetweenValueValidationRule.prototype), "constructor", this).call(this, { minimumValue: minimumValue, maximumValue: maximumValue }, function (newValue, threshold) {
+      return "needs to be between " + threshold.minimumValue + " and " + threshold.maximumValue;
+    }, function (newValue, threshold) {
+      return threshold.minimumValue <= newValue && newValue < threshold.maximumValue;
     });
   }
 
-  _inherits(EqualityRule, ValidationRule);
+  _inherits(BetweenValueValidationRule, ValidationRule);
 
-  return EqualityRule;
+  return BetweenValueValidationRule;
+})(ValidationRule);
+var DigitValidationRule = exports.DigitValidationRule = (function (ValidationRule) {
+  function DigitValidationRule() {
+    var _this2 = this;
+    _classCallCheck(this, DigitValidationRule);
+
+    this.digitRegex = /^\d+$/;
+    _get(Object.getPrototypeOf(DigitValidationRule.prototype), "constructor", this).call(this, null, function (newValue, threshold) {
+      return "can contain only digits";
+    }, function (newValue, threshold) {
+      return _this2.digitRegex.test(newValue);
+    });
+  }
+
+  _inherits(DigitValidationRule, ValidationRule);
+
+  return DigitValidationRule;
+})(ValidationRule);
+var AlphaNumericValidationRule = exports.AlphaNumericValidationRule = (function (ValidationRule) {
+  function AlphaNumericValidationRule() {
+    var _this2 = this;
+    _classCallCheck(this, AlphaNumericValidationRule);
+
+    this.alphaNumericRegex = /^[a-z0-9]+$/i;
+    _get(Object.getPrototypeOf(AlphaNumericValidationRule.prototype), "constructor", this).call(this, null, function (newValue, threshold) {
+      return "can contain only alphanumerical characters";
+    }, function (newValue, threshold) {
+      return _this2.alphaNumericRegex.test(newValue);
+    });
+  }
+
+  _inherits(AlphaNumericValidationRule, ValidationRule);
+
+  return AlphaNumericValidationRule;
+})(ValidationRule);
+var AlphaNumericOrWhitespaceValidationRule = exports.AlphaNumericOrWhitespaceValidationRule = (function (ValidationRule) {
+  function AlphaNumericOrWhitespaceValidationRule() {
+    var _this2 = this;
+    _classCallCheck(this, AlphaNumericOrWhitespaceValidationRule);
+
+    this.alphaNumericRegex = /^[a-z0-9\s]+$/i;
+    _get(Object.getPrototypeOf(AlphaNumericOrWhitespaceValidationRule.prototype), "constructor", this).call(this, null, function (newValue, threshold) {
+      return "can contain only alphanumerical characters or spaces";
+    }, function (newValue, threshold) {
+      return _this2.alphaNumericRegex.test(newValue);
+    });
+  }
+
+  _inherits(AlphaNumericOrWhitespaceValidationRule, ValidationRule);
+
+  return AlphaNumericOrWhitespaceValidationRule;
+})(ValidationRule);
+var StrongPasswordValidationRule = exports.StrongPasswordValidationRule = (function (ValidationRule) {
+  function StrongPasswordValidationRule(minimumComplexityLevel) {
+    _classCallCheck(this, StrongPasswordValidationRule);
+
+    var complexityLevel = 4;
+    if (minimumComplexityLevel && minimumComplexityLevel > 1 && minimumComplexityLevel < 4) complexityLevel = minimumComplexityLevel;
+
+
+    _get(Object.getPrototypeOf(StrongPasswordValidationRule.prototype), "constructor", this).call(this, complexityLevel, function (newValue, threshold) {
+      if (threshold == 4) return "should contain a combination of lowercase letters, uppercase letters, digits and special characters";else return "should contain at least " + threshold + " of the following groups: lowercase letters, uppercase letters, digits and special characters";
+    }, function (newValue, threshold) {
+      if (typeof newValue !== "string") return false;
+      var strength = 0;
+
+      strength += /[A-Z]+/.test(newValue) ? 1 : 0;
+      strength += /[a-z]+/.test(newValue) ? 1 : 0;
+      strength += /[0-9]+/.test(newValue) ? 1 : 0;
+      strength += /[\W]+/.test(newValue) ? 1 : 0;
+      return strength >= threshold;
+    });
+  }
+
+  _inherits(StrongPasswordValidationRule, ValidationRule);
+
+  return StrongPasswordValidationRule;
+})(ValidationRule);
+var EqualityValidationRule = exports.EqualityValidationRule = (function (ValidationRule) {
+  function EqualityValidationRule(otherValue, equality, otherValueLabel) {
+    _classCallCheck(this, EqualityValidationRule);
+
+    _get(Object.getPrototypeOf(EqualityValidationRule.prototype), "constructor", this).call(this, {
+      otherValue: otherValue,
+      equality: equality,
+      otherValueLabel: otherValueLabel
+    }, function (newValue, threshold) {
+      if (threshold.otherValueLabel) if (threshold.equality) return "does not match " + threshold.otherValueLabel;else return "cannot not match " + threshold.otherValueLabel;else if (threshold.equality) return "should be " + threshold.otherValue;else return "cannot not be " + threshold.otherValue;
+    }, function (newValue, threshold) {
+      if (newValue instanceof Date && threshold.otherValue instanceof Date) return threshold.equality === (newValue.getTime() === threshold.otherValue.getTime());
+      return threshold.equality === (newValue === threshold.otherValue);
+    });
+  }
+
+  _inherits(EqualityValidationRule, ValidationRule);
+
+  return EqualityValidationRule;
 })(ValidationRule);
 Object.defineProperty(exports, "__esModule", {
   value: true

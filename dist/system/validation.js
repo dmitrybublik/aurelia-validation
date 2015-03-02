@@ -1,4 +1,4 @@
-System.register(["./validation/validation"], function (_export) {
+System.register(["./validation/validation", "./validation/validateAttachedBehavior"], function (_export) {
   "use strict";
 
   var ValidateAttachedBehavior;
@@ -12,8 +12,12 @@ System.register(["./validation/validation"], function (_export) {
       for (var _key in _validationValidation) {
         _export(_key, _validationValidation[_key]);
       }
+    }, function (_validationValidateAttachedBehavior) {
+      for (var _key2 in _validationValidateAttachedBehavior) {
+        _export(_key2, _validationValidateAttachedBehavior[_key2]);
+      }
 
-      ValidateAttachedBehavior = _validationValidation.ValidateAttachedBehavior;
+      ValidateAttachedBehavior = _validationValidateAttachedBehavior.ValidateAttachedBehavior;
     }],
     execute: function () {}
   };

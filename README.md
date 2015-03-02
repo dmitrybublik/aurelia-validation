@@ -243,20 +243,47 @@ Validates that the value entered contains only lowercase characters, uppercase c
 Validates that the value entered is a strong password. A strong password contains each of the following groups: lowercase characters, uppercase characters, digits and special characters.
 Optionally takes a *minumumComplexityLevel* of 2, 3 or 4 (default) to allow weak, medium or strong passwords only.
 This matches the number of groups (lowercase/uppercase/digits/special characters) that need to be present.
->Note: for optimal user experience if preceded with .betweenLength(8,16)
+>Note: optimal user experience when preceded with .betweenLength(8,16)
 
 ####matchesRegex(regexString)
 Validates that the value entered is valid according to the provided *regexString* (string).
 
-####matches(regex){
+####matches(regex)
 Validates that the value entered is valid according to the provided *regex* (RegExp).
 
+####passes(customFunction, threshold)
+Validates that the value entered is valid according to the provided *customFunction*.
+Your *customFunction* is a function that takes two arguments: *newValue* (the value currently being evaluated) and optionally: *threshold*, and returns true/false.
+>Note: there is a default message for *passes*, but this one is usually followed by a call to *withMessage*
+
 ####withMessage(message)
-Adds a custom message for the previously appended validation rule. **message** is a function that generally takes two arguments: **newValue** (the value that has been evaluated) and **threshold**.
+Adds a custom message for the previously appended validation rule. *message* is either a static string or a function that takes two arguments: *newValue* (the value that has been evaluated) and **threshold**.
 
-####passes(validationRule)
-Validated that the message passes the provided *validationRule* (ValidationRule). See **custom validation**.
+####passesRule(validationRule)
+Validates that the message passes the provided *validationRule* (ValidationRule). See **custom validation**.
 
+
+#I18N
+
+####Changing locale
+Changing the locale is done on a 'global' level by calling *Validation.Locale.load(localeIdentifier)*
+
+``` javascript
+import {Validation} from 'aurelia-validation';
+//Then, when you need to change the locale
+Validation.Locale.load('nl-BE')
+    .then(()=>{
+        var currentLocale = Validation.Locale.currentLocaleIdentifier; //'nl-BE'
+    });
+```
+The *load* method takes a *localeIdentifier* (see 'Supported locales') and returns a promise that completes when the locale is fully loaded.
+>Note: error messages already resolved are not currently updated when the locale changes
+
+
+####Supported locales
+en-US (default)
+nl-BE
+> We could use a little help here...
 
 # Custom validation
 
@@ -269,23 +296,23 @@ export class MinimumLengthValidationRule extends ValidationRule{
 	constructor (minimumLength) {
 		super(
 			minimumLength,
-			(newValue, threshold) => {
-				return `needs to be at least ${threshold} characters long`;
-			},
 			(newValue, minimumLength) => {
 				 return newValue.length !== undefined && newValue.length >= minimumLength;
 			}
+			(newValue, threshold) => {
+				return `needs to be at least ${threshold} characters long`;
+			},
 		);
 	}
 }
 ```
 The ValidationRule base class needs three constructor arguments:
 - **threshold**: any javascript object that will be used as the 'threshold'.
-- **message**: a javascript function that takes two arguments (**newValue**: the current value that was evaluated, and **threshold**: the javascript object that you passed earlier) and returns a string that's used as the message when the property is not valid
 - **onValidate**: a javascript function that takes two arguments (**newValue**: the current value that needs to be evaluated, and **threshold**: the javascript object that you passed earlier).
+- **message**: a static string or a javascript function that takes two arguments (**newValue**: the current value that was evaluated, and **threshold**: the javascript object that you passed earlier) and returns a string that's used as the message when the property is not valid
 
 
->Note: It's not needed to name your variables **newValue** and **threshold**, but if you don't, then custom (*withMessage*) or localized messages will not properly work.
+>Note: It suggested to name your variables **newValue** and **threshold**, so that custom (*withMessage*) or localized messages will properly work.
 
 ####Custom validation functions
 In addition to calling *passes(myCustomValidationRule)*, you can add custom validation functions to the **ValidationGroup** object's prototype.
