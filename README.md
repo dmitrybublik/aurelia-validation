@@ -233,13 +233,13 @@ This supports propertly formatted numbers, like '-1,000.00'.
 ###isDigit()
 Validates that the value entered contains only digits.
 
-###isAlphanumeric()
+####isAlphanumeric()
 Validates that the value entered contains only lowercase characters, uppercase characters, or digits.
 
-###isAlphanumericOrWhitespace()
+####isAlphanumericOrWhitespace()
 Validates that the value entered contains only lowercase characters, uppercase characters, digits or whitespace.
 
-###isStrongPassword(minimumComplexityLevel)
+####isStrongPassword(minimumComplexityLevel)
 Validates that the value entered is a strong password. A strong password contains each of the following groups: lowercase characters, uppercase characters, digits and special characters.
 Optionally takes a *minumumComplexityLevel* of 2, 3 or 4 (default) to allow weak, medium or strong passwords only.
 This matches the number of groups (lowercase/uppercase/digits/special characters) that need to be present.
