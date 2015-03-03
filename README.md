@@ -230,7 +230,7 @@ Validates that the length of the value entered is greater than or equal to the p
 Validates that the value entered is numeric.
 This supports propertly formatted numbers, like '-1,000.00'.
 
-###isDigit()
+####isDigit()
 Validates that the value entered contains only digits.
 
 ####isAlphanumeric()
@@ -281,8 +281,8 @@ The *load* method takes a *localeIdentifier* (see 'Supported locales') and retur
 
 
 ####Supported locales
-en-US (default)
-nl-BE
+- en-US (default)
+- nl-BE
 > We could use a little help here...
 
 # Custom validation
