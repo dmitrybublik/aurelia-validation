@@ -1,5 +1,3 @@
-//en-US is loaded by default.
-//to the rest of the world: I'm so very sorry.
 export let data = {
     settings : {
         'numericRegex' : /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/
@@ -7,22 +5,22 @@ export let data = {
     messages : {
         'isRequired' : 'est obligatoire',
         'AlphaNumericOrWhitespaceValidationRule' : (newValue, threshold) => {
-        	return `ne peut contenir que des caractères de type numérique ou alphabétique ou avec des espaces;
+        	return `ne peut contenir que des caractï¿½res de type numï¿½rique ou alphabï¿½tique ou avec des espaces;
         },
         'AlphaNumericValidationRule' : (newValue, threshold) => {
-            return `ne peut contenir que des caractères de type numérique ou alphabétique`;
+            return `ne peut contenir que des caractï¿½res de type numï¿½rique ou alphabï¿½tique`;
         },
         'BetweenLengthValidationRule' : (newValue, threshold) => {
-            return `doit être compris entre between ${threshold.minimumLength} et ${threshold.maximumLength} caratères`;
+            return `doit ï¿½tre compris entre between ${threshold.minimumLength} et ${threshold.maximumLength} caratï¿½res`;
         },
         'BetweenValueValidationRule' : (newValue, threshold) => {
-            return `doit être entre ${threshold.minimumValue} et ${threshold.maximumValue}`;
+            return `doit ï¿½tre entre ${threshold.minimumValue} et ${threshold.maximumValue}`;
         },
         'CustomFunctionValidationRule' : (newValue, threshold) => {
             return `n'est pas une valeur valide`
         },
         'DigitValidationRule' :  (newValue, threshold) => {
-            return `doit contenir uniquement des valeurs nurmérique`;
+            return `doit contenir uniquement des valeurs nurmï¿½rique`;
         },
         'EmailValidationRule' : (newValue, threshold) => {
             return `n'est pas une email valide`;
@@ -34,33 +32,33 @@ export let data = {
                 else
                     return `ne peut pas correspondre ${threshold.otherValueLabel}`;
             else if (threshold.equality)
-                return `devrait être ${threshold.otherValue}`;
+                return `devrait ï¿½tre ${threshold.otherValue}`;
             else
-                return `ne peut être ${threshold.otherValue}`;
+                return `ne peut ï¿½tre ${threshold.otherValue}`;
         },
         'MinimumLengthValidationRule' : (newValue, threshold) => {
-            return `doit avoir au moins ${threshold} caratères`;
+            return `doit avoir au moins ${threshold} caratï¿½res`;
         },
         'MinimumValueValidationRule' : (newValue, threshold) => {
-            return `doit être ${threshold} ou plus`;
+            return `doit ï¿½tre ${threshold} ou plus`;
         },
         'MaximumLengthValidationRule' : (newValue, threshold) => {
-            return `ne peut être plus long que ${threshold} caractères`;
+            return `ne peut ï¿½tre plus long que ${threshold} caractï¿½res`;
         },
         'MaximumValueValidationRule' : (newValue, threshold) => {
-            return `doit être moins que ${threshold}`;
+            return `doit ï¿½tre moins que ${threshold}`;
         },
         'NumericValidationRule' : (newValue, threshold) => {
-            return `doit être numérique`;
+            return `doit ï¿½tre numï¿½rique`;
         },
         'RegexValidationRule' : (newValue, threshold) => {
             return `n'est pas une valeur valide`;
         },
         'StrongPasswordValidationRule' : (newValue, threshold) => {
             if(threshold == 4)
-                return `devrait contenir une combinaison de lettres en miniscule, majuscule, numérique et des caractères spéciaux`;
+                return `devrait contenir une combinaison de lettres en miniscule, majuscule, numï¿½rique et des caractï¿½res spï¿½ciaux`;
             else
-                return `devrait contenir au moins ${threshold} les caractéristiques suivants: lettres minuscule, lettres majuscule, caractères numérique ou scpéciaux`;
+                return `devrait contenir au moins ${threshold} les caractï¿½ristiques suivants: lettres minuscule, lettres majuscule, caractï¿½res numï¿½rique ou scpï¿½ciaux`;
         }
     }
 }
