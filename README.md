@@ -346,7 +346,7 @@ export class App {
 }
 
 ```
->Note: Your function can add custom validation rules by calling *this.passes(customValidationRule)* or any other validation function. Provide a specific error message by calling *withMessage(validationMessage)*. Your function should always end with **return this;** to enable the fluent API.
+>Note: Your function can add custom validation rules by calling *this.passes(customValidationFunction)*, *this.passesRule(customValidationRule)* or any other validation function. Provide a specific error message by calling *withMessage(validationMessage)*. Your function should always end with **return this;** to enable the fluent API.
 
 Then, when you're setting up validation, you can use your new method:
 ``` javascript
