@@ -31,6 +31,15 @@ describe('I18N tests: messages', () => {
             done();
         });
     });
+    it('should result in properly translated default error message in a third language as well', (done) => {
+        Validation.Locale.load('nl-NL').then(()=> {
+            var subject = TestSubject.createInstance(null);
+            subject.validation.checkAll();
+            expect(subject.validation.validationProperties[0].message).toBe('is verplicht');
+            Validation.Locale.reset();
+            done();
+        });
+    });
 });
 
 describe('I18N tests: number', () => {
