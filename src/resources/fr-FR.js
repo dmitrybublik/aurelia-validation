@@ -5,22 +5,22 @@ export let data = {
     messages : {
         'isRequired' : 'est obligatoire',
         'AlphaNumericOrWhitespaceValidationRule' : (newValue, threshold) => {
-        	return `ne peut contenir que des caract�res de type num�rique ou alphab�tique ou avec des espaces;
+            return `ne peut contenir que des caractères de type numérique ou alphabétique ou avec des espaces;
         },
         'AlphaNumericValidationRule' : (newValue, threshold) => {
-            return `ne peut contenir que des caract�res de type num�rique ou alphab�tique`;
+            return `ne peut contenir que des caractères de type numérique ou alphabétique`;
         },
         'BetweenLengthValidationRule' : (newValue, threshold) => {
-            return `doit �tre compris entre between ${threshold.minimumLength} et ${threshold.maximumLength} carat�res`;
+            return `doit être compris entre between ${threshold.minimumLength} et ${threshold.maximumLength} caratères`;
         },
         'BetweenValueValidationRule' : (newValue, threshold) => {
-            return `doit �tre entre ${threshold.minimumValue} et ${threshold.maximumValue}`;
+            return `doit être entre ${threshold.minimumValue} et ${threshold.maximumValue}`;
         },
         'CustomFunctionValidationRule' : (newValue, threshold) => {
             return `n'est pas une valeur valide`
         },
-        'DigitValidationRule' :  (newValue, threshold) => {
-            return `doit contenir uniquement des valeurs nurm�rique`;
+        'DigitValidationRule' : (newValue, threshold) => {
+            return `doit contenir uniquement des valeurs nurmérique`;
         },
         'EmailValidationRule' : (newValue, threshold) => {
             return `n'est pas une email valide`;
@@ -32,33 +32,33 @@ export let data = {
                 else
                     return `ne peut pas correspondre ${threshold.otherValueLabel}`;
             else if (threshold.equality)
-                return `devrait �tre ${threshold.otherValue}`;
+                return `devrait être ${threshold.otherValue}`;
             else
-                return `ne peut �tre ${threshold.otherValue}`;
+                return `ne peut être ${threshold.otherValue}`;
         },
         'MinimumLengthValidationRule' : (newValue, threshold) => {
-            return `doit avoir au moins ${threshold} carat�res`;
+            return `doit avoir au moins ${threshold} caratères`;
         },
         'MinimumValueValidationRule' : (newValue, threshold) => {
-            return `doit �tre ${threshold} ou plus`;
+            return `doit être ${threshold} ou plus`;
         },
         'MaximumLengthValidationRule' : (newValue, threshold) => {
-            return `ne peut �tre plus long que ${threshold} caract�res`;
+            return `ne peut être plus long que ${threshold} caractères`;
         },
         'MaximumValueValidationRule' : (newValue, threshold) => {
-            return `doit �tre moins que ${threshold}`;
+            return `doit être moins que ${threshold}`;
         },
         'NumericValidationRule' : (newValue, threshold) => {
-            return `doit �tre num�rique`;
+            return `doit être numérique`;
         },
         'RegexValidationRule' : (newValue, threshold) => {
             return `n'est pas une valeur valide`;
         },
         'StrongPasswordValidationRule' : (newValue, threshold) => {
             if(threshold == 4)
-                return `devrait contenir une combinaison de lettres en miniscule, majuscule, num�rique et des caract�res sp�ciaux`;
+                return `devrait contenir une combinaison de lettres en miniscule, majuscule, numérique et des caractères spéciaux`;
             else
-                return `devrait contenir au moins ${threshold} les caract�ristiques suivants: lettres minuscule, lettres majuscule, caract�res num�rique ou scp�ciaux`;
+                return `devrait contenir au moins ${threshold} les caractéristiques suivants: lettres minuscule, lettres majuscule, caractères numérique ou scpéciaux`;
         }
     }
 }
