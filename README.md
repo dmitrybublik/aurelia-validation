@@ -283,6 +283,7 @@ The *load* method takes a *localeIdentifier* (see 'Supported locales') and retur
 ####Supported locales
 - en-US (default)
 - nl-BE
+
 > We could use a little help here...
 
 # Custom validation
