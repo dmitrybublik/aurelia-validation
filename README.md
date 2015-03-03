@@ -282,6 +282,7 @@ The *load* method takes a *localeIdentifier* (see 'Supported locales') and retur
 
 ####Supported locales
 - en-US (default)
+- fr-FR
 - nl-BE
 - nl-NL
 
